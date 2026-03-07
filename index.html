@@ -66,8 +66,8 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 /* ══════════════════════════════════════
    BAZI CHART — Pillar Card Layout
    ══════════════════════════════════════ */
-.bz-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;}
-@media(max-width:580px){.bz-grid{grid-template-columns:repeat(2,1fr);}}
+.bz-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.bz-grid{display:grid;grid-template-columns:repeat(4,minmax(80px,1fr));gap:.5rem;min-width:320px;}
 
 /* Column header */
 .bz-hdr{text-align:center;font-size:.64rem;font-weight:700;color:var(--muted);letter-spacing:.06em;padding:.25rem 0 .4rem;}
@@ -760,7 +760,7 @@ function renderPillar(p, dmIdx, isDM, label, sub) {
 function renderChart(YP,MP,DP,HP,dmIdx){
   const cols=[{p:YP,l:'年柱',s:'Year',dm:false},{p:MP,l:'月柱',s:'Month',dm:false},{p:DP,l:'日柱',s:'Day',dm:true},{p:HP,l:'时柱',s:'Hour',dm:false}];
   return `
-    <div class="bz-grid">${cols.map(c=>renderPillar(c.p,dmIdx,c.dm,c.l,c.s)).join('')}</div>
+    <div class="bz-wrap"><div class="bz-grid">${cols.map(c=>renderPillar(c.p,dmIdx,c.dm,c.l,c.s)).join('')}</div></div>
     <div class="flex flex-wrap gap-3 mt-4 text-xs muted">
       <span>🟩 長生·冠帶·臨官·帝旺 = แข็ง</span>
       <span>🟨 衰·胎·養 = ปานกลาง</span>
