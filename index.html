@@ -643,8 +643,15 @@ body.bnav-open{padding-bottom:72px;}
           <!-- PDF -->
           <div class="p-4">
             <p class="text-sm font-semibold mb-3" style="color:#a5b4fc">📄 อ่าน PDF Strategic Blueprint</p>
+            <!-- ปุ่มเปิดใหม่ — ทุก device -->
+            <a href="Example Blue Print/เคสตัวอย่าง - Strategic Blueprint.pdf" target="_blank" rel="noopener"
+              class="flex items-center justify-center gap-2 w-full py-3 rounded-xl font-bold text-sm mb-3 transition-opacity hover:opacity-80"
+              style="background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff">
+              📂 เปิด PDF เต็มหน้าจอ (แนะนำสำหรับมือถือ)
+            </a>
+            <!-- iframe — desktop เท่านั้น -->
             <iframe src="Example Blue Print/เคสตัวอย่าง - Strategic Blueprint.pdf"
-              class="w-full rounded-lg" style="height:560px;border:none;background:#1a1400"></iframe>
+              class="w-full rounded-lg hidden sm:block" style="height:560px;border:none;background:#1a1400"></iframe>
           </div>
         </div>
       </div>
