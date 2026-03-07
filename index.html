@@ -239,7 +239,7 @@ body.bnav-open{padding-bottom:72px;}
     <p class="text-lg mb-3 muted" style="max-width:600px;margin-left:auto;margin-right:auto;">
       บาจื่อ — หลักธรรมชาติที่จักรวาลบันทึกไว้ในวันเกิดของคุณ
     </p>
-    <p class="text-sm mb-10" style="color:var(--muted2)">ค้นพบดวงชะตา · นิสัย · การงาน · การเงิน · เส้นทางชีวิต — ฟรี ไม่ต้องสมัคร</p>
+    <p class="text-sm mb-10" style="color:var(--muted2)">ค้นพบดวงชะตา · นิสัย · การงาน · การเงิน · เส้นทางชีวิต</p>
 
     <a href="#app" class="inline-block px-14 py-4 gold-bg text-black font-bold text-xl rounded-full hover:opacity-90 transition"
        style="box-shadow:0 8px 48px rgba(212,160,23,.4)">
@@ -611,7 +611,6 @@ body.bnav-open{padding-bottom:72px;}
           <li class="check">สรุปผลเป็น <strong>PDF + PowerPoint</strong> ดีไซน์สวยงาม</li>
           <li class="check"><strong>ไฟล์เสียงวิเคราะห์</strong> เฉพาะบุคคล (Personalized Audio)</li>
           <li class="check">วิเคราะห์สิบเทพ + Hidden Stems ทุกหลักอย่างละเอียด</li>
-          <li class="check">คำแนะนำ อาชีพ คู่ครองที่เหมาะสม ธาตุเสริมดวง</li>
           <li class="check">จัดส่งภายใน <strong>2 วันทำการ</strong></li>
         </ul>
       </div>
@@ -619,10 +618,36 @@ body.bnav-open{padding-bottom:72px;}
         <a href="https://line.me/ti/p/l25exED9bl" target="_blank" rel="noopener"
            class="w-full max-w-sm text-center py-4 px-8 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl text-xl transition"
            style="box-shadow:0 4px 24px rgba(22,163,74,.35)">
-          💬 สอบถาม Add Friend Line
+          💬  Add Line สอบถาม
         </a>
       </div>
-      <p class="text-center text-xs muted mt-4">PromptPay · QR Code · LINE Pay</p>
+
+      <!-- ── SHOWCASE TOGGLE ── -->
+      <div class="mt-6 flex flex-col items-center">
+        <button onclick="toggleShowcase()" id="showcase-btn"
+          class="w-full max-w-sm py-3.5 px-6 rounded-xl font-bold text-base transition-all flex items-center justify-center gap-2"
+          style="background:linear-gradient(135deg,#7c3aed,#4f46e5,#0ea5e9);color:#fff;box-shadow:0 4px 24px rgba(99,102,241,.4)">
+          🎯 ดูเคสตัวอย่างจริง — Strategic Blueprint
+          <span id="showcase-arrow" style="transition:transform .3s">▼</span>
+        </button>
+
+        <div id="showcase-panel" class="w-full mt-4 rounded-2xl overflow-hidden" style="display:none;border:1px solid rgba(99,102,241,.3);background:rgba(0,0,0,.4)">
+          <!-- Audio -->
+          <div class="p-4" style="border-bottom:1px solid rgba(99,102,241,.2)">
+            <p class="text-sm font-semibold mb-3" style="color:#a5b4fc">🎙️ ฟังไฟล์เสียงวิเคราะห์</p>
+            <audio controls class="w-full" style="accent-color:#7c3aed">
+              <source src="Example Blue Print/เคสตัวอย่าง - Strategic Blueprint.m4a" type="audio/mp4">
+              เบราว์เซอร์ไม่รองรับการเล่นเสียง
+            </audio>
+          </div>
+          <!-- PDF -->
+          <div class="p-4">
+            <p class="text-sm font-semibold mb-3" style="color:#a5b4fc">📄 อ่าน PDF Strategic Blueprint</p>
+            <iframe src="Example Blue Print/เคสตัวอย่าง - Strategic Blueprint.pdf"
+              class="w-full rounded-lg" style="height:560px;border:none;background:#1a1400"></iframe>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1071,6 +1096,14 @@ function handleCountryChange(){
   document.getElementById('section-province').style.display=document.getElementById('inp-country').value==='TH'?'':'none';
 }
 initForm();
+
+function toggleShowcase(){
+  const panel=document.getElementById('showcase-panel');
+  const arrow=document.getElementById('showcase-arrow');
+  const open=panel.style.display==='none'||panel.style.display==='';
+  panel.style.display=open?'block':'none';
+  arrow.style.transform=open?'rotate(180deg)':'';
+}
 </script>
 </body>
 </html>
