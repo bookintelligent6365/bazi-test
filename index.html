@@ -179,6 +179,27 @@ details>summary{list-style:none;cursor:pointer;}
 details>summary::-webkit-details-marker{display:none;}
 .chev{transition:transform .18s;display:inline-block;}
 details[open] .chev{transform:rotate(180deg);}
+
+/* BOTTOM NAV (mobile only) */
+.bnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:rgba(10,8,0,.97);border-top:1px solid var(--border);
+  padding:0 0 env(safe-area-inset-bottom,0);
+  box-shadow:0 -4px 24px rgba(0,0,0,.5);}
+.bnav.show{display:block;}
+.bnav-row{display:flex;overflow-x:auto;scrollbar-width:none;gap:0;}
+.bnav-row::-webkit-scrollbar{display:none;}
+.bnav-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;
+  padding:.55rem .6rem .4rem;min-width:68px;cursor:pointer;border:none;
+  background:transparent;color:var(--muted);transition:color .15s,background .15s;gap:2px;}
+.bnav-btn:active{background:rgba(212,160,23,.08);}
+.bnav-btn.active{color:var(--gold);}
+.bnav-ico{font-size:1.25rem;line-height:1;}
+.bnav-lbl{font-size:.52rem;font-weight:600;white-space:nowrap;font-family:'Sarabun',sans-serif;}
+.bnav-bar{height:2px;width:24px;border-radius:999px;background:var(--gold);
+  margin-top:3px;opacity:0;transition:opacity .15s;}
+.bnav-btn.active .bnav-bar{opacity:1;}
+@media(min-width:961px){.bnav{display:none!important;}}
+body.bnav-open{padding-bottom:72px;}
 </style>
 </head>
 <body>
@@ -613,6 +634,20 @@ details[open] .chev{transform:rotate(180deg);}
   <p class="text-xs mt-1 opacity-50">* เพื่อความบันเทิงและข้อมูลเบื้องต้นเท่านั้น</p>
 </footer>
 
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bnav" id="bnav">
+  <div class="bnav-row">
+    <button class="bnav-btn active" onclick="showPanel('chart')"       id="bn-chart">      <span class="bnav-ico">📊</span><span class="bnav-lbl">สี่เสา</span><div class="bnav-bar"></div></button>
+    <button class="bnav-btn"        onclick="showPanel('luck')"        id="bn-luck">       <span class="bnav-ico">🔄</span><span class="bnav-lbl">วัยจร</span><div class="bnav-bar"></div></button>
+    <button class="bnav-btn"        onclick="showPanel('year')"        id="bn-year">       <span class="bnav-ico">📅</span><span class="bnav-lbl">รายปี</span><div class="bnav-bar"></div></button>
+    <button class="bnav-btn"        onclick="showPanel('monthly')"     id="bn-monthly">    <span class="bnav-ico">🗓</span><span class="bnav-lbl">รายเดือน</span><div class="bnav-bar"></div></button>
+    <button class="bnav-btn"        onclick="showPanel('elements')"    id="bn-elements">   <span class="bnav-ico">☯</span><span class="bnav-lbl">ธาตุ</span><div class="bnav-bar"></div></button>
+    <button class="bnav-btn"        onclick="showPanel('personality')" id="bn-personality"><span class="bnav-ico">🌟</span><span class="bnav-lbl">นิสัย</span><div class="bnav-bar"></div></button>
+    <button class="bnav-btn"        onclick="showPanel('career')"      id="bn-career">     <span class="bnav-ico">💼</span><span class="bnav-lbl">การงาน</span><div class="bnav-bar"></div></button>
+    <button class="bnav-btn"        onclick="showPanel('finance')"     id="bn-finance">    <span class="bnav-ico">💰</span><span class="bnav-lbl">การเงิน</span><div class="bnav-bar"></div></button>
+  </div>
+</nav>
+
 <script src="dist/engine.bundle.js"></script>
 <script>
 'use strict';
@@ -1000,6 +1035,8 @@ function renderAll(d){
   document.getElementById('res-finance').innerHTML      = renderFinance(dmIdx,ec);
 
   document.getElementById('results-area').classList.remove('hidden');
+  document.getElementById('bnav').classList.add('show');
+  document.body.classList.add('bnav-open');
   setTimeout(()=>{ document.querySelectorAll('#elem-bars .bar-fill').forEach(b=>{b.style.width=b.dataset.w+'%';}); },100);
   setTimeout(()=>{ document.getElementById('results-area').scrollIntoView({behavior:'smooth',block:'start'}); },200);
   showPanel('chart');
@@ -1011,6 +1048,7 @@ function showPanel(name){
   PANELS.forEach(id=>{
     const el=document.getElementById('panel-'+id); if(el)el.classList.toggle('show',id===name);
     const btn=document.getElementById('sb-'+id); if(btn)btn.classList.toggle('active',id===name);
+    const bn=document.getElementById('bn-'+id); if(bn)bn.classList.toggle('active',id===name);
   });
   document.querySelectorAll('.mob-tab').forEach((t,i)=>t.classList.toggle('active',PANELS[i]===name));
   const panel=document.getElementById('panel-'+name);
