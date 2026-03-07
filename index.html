@@ -160,8 +160,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .check::before{content:"✦";color:var(--gold);margin-right:8px;}
 
 /* PANELS */
-.result-panel{display:none;}
-.result-panel.show{display:block;}
+.result-panel{display:block;}
 
 /* ANIMATIONS */
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -1046,7 +1045,6 @@ function renderAll(d){
 const PANELS=['chart','luck','year','monthly','elements','personality','career','finance'];
 function showPanel(name){
   PANELS.forEach(id=>{
-    const el=document.getElementById('panel-'+id); if(el)el.classList.toggle('show',id===name);
     const btn=document.getElementById('sb-'+id); if(btn)btn.classList.toggle('active',id===name);
     const bn=document.getElementById('bn-'+id); if(bn)bn.classList.toggle('active',id===name);
   });
