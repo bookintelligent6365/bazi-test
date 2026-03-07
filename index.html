@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>八字 BaZi — วิเคราะห์ดวงชะตาจีน AI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:      #d4a017;
+  --gold-l:    #f0c840;
+  --gold-glow: rgba(212,160,23,.25);
+  --bg:        #080600;
+  --s1:        #100d00;
+  --s2:        #171200;
+  --s3:        #1e1800;
+  --border:    rgba(212,160,23,.18);
+  --border2:   rgba(212,160,23,.08);
+  --text:      #f0e6c0;
+  --muted:     #8b7a50;
+  --muted2:    #4a4030;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.gold{color:var(--gold);}
+.gold-bg{background:var(--gold);}
+.muted{color:var(--muted);}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:.875rem;}
+.inset{background:rgba(0,0,0,.3);border:1px solid var(--border2);border-radius:.5rem;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,6,0,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+
+/* HERO */
+.hero-bg{background:radial-gradient(ellipse 80% 60% at 50% -5%,#2a1c00 0%,#130a00 55%,var(--bg) 100%);}
+
+/* APP GRID */
+.app-grid{display:grid;grid-template-columns:240px 1fr;gap:1.25rem;align-items:start;max-width:1280px;margin:0 auto;padding:0 1rem;}
+@media(max-width:960px){.app-grid{grid-template-columns:1fr;}.sidebar{display:none!important;}.mob-tabs{display:flex!important;}}
+
+/* SIDEBAR */
+.sidebar{position:sticky;top:68px;max-height:calc(100vh - 84px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.sb-label{font-size:.64rem;font-weight:700;color:var(--muted2);letter-spacing:.12em;text-transform:uppercase;padding:.5rem .75rem .2rem;}
+.sb-btn{display:flex;align-items:center;gap:.55rem;padding:.55rem .75rem;border-radius:.5rem;font-size:.82rem;cursor:pointer;transition:all .15s;color:var(--muted);border:none;background:transparent;width:100%;text-align:left;}
+.sb-btn:hover{background:rgba(212,160,23,.1);color:var(--gold-l);}
+.sb-btn.active{background:rgba(212,160,23,.14);color:var(--gold);font-weight:600;}
+.sb-ico{width:18px;text-align:center;flex-shrink:0;}
+.sb-div{height:1px;background:var(--border2);margin:.4rem .75rem;}
+.sb-pro{display:block;margin:.5rem .5rem .25rem;padding:.65rem;text-align:center;background:linear-gradient(135deg,#6b2d00,var(--gold),#6b2d00);color:#0a0500;font-weight:800;border-radius:.5rem;font-size:.82rem;cursor:pointer;transition:opacity .2s;}
+.sb-pro:hover{opacity:.88;}
+
+/* MOBILE TABS */
+.mob-tabs{display:none;overflow-x:auto;gap:.4rem;padding:.65rem 1rem;border-bottom:1px solid var(--border);background:var(--s1);scrollbar-width:none;}
+.mob-tabs::-webkit-scrollbar{display:none;}
+.mob-tab{flex-shrink:0;padding:.35rem .8rem;border-radius:999px;font-size:.74rem;background:var(--s2);border:1px solid var(--border2);color:var(--muted);cursor:pointer;white-space:nowrap;}
+.mob-tab.active{background:rgba(212,160,23,.18);color:var(--gold);border-color:var(--gold);}
+
+/* FORM */
+.inp{border:1.5px solid #1e1800;border-radius:.5rem;padding:.55rem .8rem;font-size:.875rem;width:100%;outline:none;font-family:inherit;background:#0a0800;color:var(--text);transition:border-color .2s;}
+.inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,160,23,.1);}
+.inp option{background:#141000;}
+.lbl{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:4px;}
+
+/* ══════════════════════════════════════
+   BAZI CHART — Pillar Card Layout
+   ══════════════════════════════════════ */
+.bz-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;}
+@media(max-width:580px){.bz-grid{grid-template-columns:repeat(2,1fr);}}
+
+/* Column header */
+.bz-hdr{text-align:center;font-size:.64rem;font-weight:700;color:var(--muted);letter-spacing:.06em;padding:.25rem 0 .4rem;}
+.bz-hdr.dm{color:var(--gold);}
+
+/* Ten-God badge */
+.tg{display:block;text-align:center;font-size:.7rem;font-weight:700;padding:.18rem .4rem;border-radius:4px;margin-bottom:.3rem;white-space:nowrap;}
+.tg-c{background:rgba(110,231,154,.12);color:#6ee79a;}   /* companion */
+.tg-o{background:rgba(251,191,36,.12); color:#fbbf24;}   /* output    */
+.tg-w{background:rgba(52,211,153,.12); color:#34d399;}   /* wealth    */
+.tg-p{background:rgba(167,139,250,.12);color:#a78bfa;}   /* power     */
+.tg-r{background:rgba(96,165,250,.12); color:#60a5fa;}   /* resource  */
+.tg-dm{background:rgba(212,160,23,.18);color:var(--gold);}
+
+/* Stem / Branch cell */
+.bz-cell{border-radius:.5rem;padding:.6rem .35rem;text-align:center;border:1px solid rgba(255,255,255,.05);}
+.bz-char{font-size:2rem;font-weight:900;line-height:1;margin-bottom:.12rem;}
+.bz-elem{font-size:.63rem;font-weight:600;opacity:.85;margin-bottom:.08rem;}
+.bz-polar{font-size:.58rem;opacity:.55;}
+
+/* Element themes */
+.tw{background:#0a1d0d;border-color:rgba(110,231,154,.18);}
+.tf{background:#1d0a0a;border-color:rgba(248,113,113,.18);}
+.te{background:#1a0d00;border-color:rgba(184,115,58,.2);}
+.tm{background:#1a1400;border-color:rgba(212,160,23,.2);}
+.ta{background:#091122;border-color:rgba(125,211,252,.18);}
+.tw .bz-char{color:#6ee79a;} .tf .bz-char{color:#f87171;}
+.te .bz-char{color:#b8733a;} .tm .bz-char{color:#d4a017;} .ta .bz-char{color:#7dd3fc;}
+
+/* DM gold glow */
+.dm-g{box-shadow:0 0 0 2px var(--gold),0 0 18px var(--gold-glow);}
+
+/* Life stage */
+.ls{text-align:center;font-size:.62rem;font-weight:600;padding:.18rem .2rem;border-radius:3px;margin:.2rem 0;}
+.ls-s{color:#6ee79a;background:rgba(110,231,154,.08);}
+.ls-m{color:#fbbf24;background:rgba(251,191,36,.08);}
+.ls-w{color:#f87171;background:rgba(248,113,113,.08);}
+
+/* Hidden stems */
+.hs-row{display:flex;justify-content:center;gap:.2rem;flex-wrap:wrap;margin-top:.25rem;}
+.hs{font-size:.68rem;font-weight:700;padding:.08rem .28rem;border-radius:3px;}
+
+/* Nayin */
+.nayin{font-size:.58rem;color:var(--muted2);text-align:center;margin-top:.2rem;}
+
+/* ══════════════════════════════════════
+   LUCK PILLARS 大运
+   ══════════════════════════════════════ */
+.lp-row{display:flex;gap:.45rem;overflow-x:auto;padding-bottom:.5rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.lp-card{flex-shrink:0;width:84px;border-radius:.625rem;overflow:hidden;border:1px solid var(--border2);transition:border-color .2s,box-shadow .2s;}
+.lp-card:hover{border-color:var(--border);}
+.lp-active{border-color:var(--gold)!important;box-shadow:0 0 14px var(--gold-glow);}
+.lp-age{font-size:.58rem;text-align:center;padding:3px 2px;background:var(--s3);color:var(--muted);}
+.lp-tg{font-size:.6rem;text-align:center;padding:2px 4px;font-weight:700;}
+.lp-stem,.lp-branch{display:flex;flex-direction:column;align-items:center;padding:5px 3px;}
+.lp-c{font-size:1.45rem;font-weight:900;line-height:1;}
+.lp-s{font-size:.5rem;margin-top:2px;opacity:.75;}
+
+/* ══════════════════════════════════════
+   YEAR CYCLE 流年
+   ══════════════════════════════════════ */
+.yc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:.4rem;}
+.yc-card{border-radius:.5rem;padding:.4rem .3rem;text-align:center;border:1px solid var(--border2);cursor:default;transition:border-color .15s;}
+.yc-card:hover{border-color:var(--border);}
+.yc-now{border-color:var(--gold)!important;background:rgba(212,160,23,.07);box-shadow:0 0 10px var(--gold-glow);}
+.yc-y{font-size:.57rem;color:var(--muted);margin-bottom:1px;}
+.yc-pair{font-size:1rem;font-weight:800;letter-spacing:1px;}
+.yc-tg{font-size:.55rem;margin-top:2px;font-weight:600;}
+.yc-sub{font-size:.52rem;color:var(--muted2);margin-top:1px;}
+
+/* ══════════════════════════════════════
+   MONTHLY CYCLE 流月
+   ══════════════════════════════════════ */
+.mc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:.4rem;}
+.mc-card{border-radius:.5rem;padding:.45rem .3rem;text-align:center;border:1px solid var(--border2);cursor:default;transition:border-color .15s;}
+.mc-card:hover{border-color:var(--border);}
+.mc-now{border-color:var(--gold)!important;background:rgba(212,160,23,.07);}
+.mc-m{font-size:.6rem;color:var(--muted);margin-bottom:2px;}
+.mc-pair{font-size:1rem;font-weight:800;letter-spacing:1px;}
+.mc-tg{font-size:.55rem;margin-top:2px;font-weight:600;}
+
+/* ══════════════════════════════════════
+   ELEMENT BAR
+   ══════════════════════════════════════ */
+.bar-track{background:rgba(255,255,255,.06);border-radius:999px;height:7px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:999px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+
+/* PREMIUM */
+.prem-bg{background:linear-gradient(135deg,#120900 0%,#201400 100%);}
+.check::before{content:"✦";color:var(--gold);margin-right:8px;}
+
+/* PANELS */
+.result-panel{display:none;}
+.result-panel.show{display:block;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeUp .4s ease-out both;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin 1.2s linear infinite;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(212,160,23,.2);border-radius:2px;}
+
+/* ACCORDION */
+details>summary{list-style:none;cursor:pointer;}
+details>summary::-webkit-details-marker{display:none;}
+.chev{transition:transform .18s;display:inline-block;}
+details[open] .chev{transform:rotate(180deg);}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ NAV ══════════════ -->
+<header class="nav">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1rem;" class="flex items-center justify-between h-16">
+    <div class="flex items-center gap-3">
+      <span class="text-3xl font-black gold" style="text-shadow:0 0 20px rgba(212,160,23,.5)">八字</span>
+      <div class="hidden sm:block">
+        <div class="text-xs font-bold text-white">BaZi · ดูดวงจีน</div>
+        <div class="text-xs" style="color:var(--muted2)">Powered by tyme4ts</div>
+      </div>
+    </div>
+    <nav class="flex items-center gap-4">
+      <a href="#hero"    class="text-sm muted hover:text-white transition hidden sm:block">หน้าแรก</a>
+      <a href="#app"     class="text-sm muted hover:text-white transition hidden sm:block">วิเคราะห์</a>
+      <a href="#premium" class="text-xs px-4 py-2 gold-bg text-black font-bold rounded-full hover:opacity-90 transition">Pro 299฿</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section id="hero" class="hero-bg relative overflow-hidden flex items-center" style="min-height:100vh;padding-top:64px;">
+  <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none" style="opacity:.025">
+    <div style="font-size:30rem;font-weight:900;color:var(--gold);line-height:1">命</div>
+  </div>
+  <div class="relative w-full max-w-4xl mx-auto px-4 py-20 text-center">
+
+    <div class="inline-flex items-center gap-2 border rounded-full px-5 py-1.5 text-xs font-semibold mb-8 tracking-widest uppercase"
+         style="border-color:var(--border);color:var(--gold);background:rgba(212,160,23,.07)">
+      ☯ โหราศาสตร์จีน · AI Powered
+    </div>
+
+    <h1 class="font-black text-white mb-5 leading-tight" style="font-size:clamp(2.5rem,8vw,5.5rem);text-shadow:0 0 80px rgba(212,160,23,.2)">
+      ดูดวง <span class="gold">八字</span><br>BaZi
+    </h1>
+    <p class="text-lg mb-3 muted" style="max-width:600px;margin-left:auto;margin-right:auto;">
+      บาจื่อ — หลักธรรมชาติที่จักรวาลบันทึกไว้ในวันเกิดของคุณ
+    </p>
+    <p class="text-sm mb-10" style="color:var(--muted2)">ค้นพบดวงชะตา · นิสัย · การงาน · การเงิน · เส้นทางชีวิต — ฟรี ไม่ต้องสมัคร</p>
+
+    <a href="#app" class="inline-block px-14 py-4 gold-bg text-black font-bold text-xl rounded-full hover:opacity-90 transition"
+       style="box-shadow:0 8px 48px rgba(212,160,23,.4)">
+      วิเคราะห์ดวง →
+    </a>
+
+    <!-- AI concept -->
+    <div class="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto text-left">
+      <div class="inset p-4 rounded-xl">
+        <div class="text-xl mb-2">🌌</div>
+        <div class="text-sm font-bold text-white mb-1">หลักธรรมชาติ</div>
+        <div class="text-xs muted">8 ตัวอักษรสะท้อนพลังงานจักรวาล ณ วินาทีที่คุณเกิด ตามหลัก 天干地支</div>
+      </div>
+      <div class="inset p-4 rounded-xl">
+        <div class="text-xl mb-2">⚙️</div>
+        <div class="text-sm font-bold text-white mb-1">คำนวณแม่นยำ</div>
+        <div class="text-xs muted">ใช้ tyme4ts engine รองรับ True Solar Time · 早晚子时 · ลองจิจูดจริง</div>
+      </div>
+      <div class="inset p-4 rounded-xl">
+        <div class="text-xl mb-2">🔒</div>
+        <div class="text-sm font-bold text-white mb-1">ปลอดภัย 100%</div>
+        <div class="text-xs muted">ประมวลผลบนเครื่องของคุณทั้งหมด ไม่มีการส่งข้อมูลออกนอก</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="mt-12 flex justify-center gap-10 flex-wrap">
+      <div class="text-center"><div class="text-4xl font-black text-white">8</div><div class="text-xs mt-1 muted">ตัวอักษร</div></div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div class="text-center"><div class="text-4xl font-black text-white">5</div><div class="text-xs mt-1 muted">ธาตุ</div></div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div class="text-center"><div class="text-4xl font-black text-white">10</div><div class="text-xs mt-1 muted">เทพ</div></div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div class="text-center"><div class="text-3xl font-black text-white">大运</div><div class="text-xs mt-1 muted">10ปี/รอบ</div></div>
+    </div>
+    <div class="mt-10 muted text-xl animate-bounce">↓</div>
+  </div>
+</section>
+
+<!-- ══════════════ APP ══════════════ -->
+<section id="app" class="py-8" style="min-height:100vh;">
+  <div class="mob-tabs" id="mob-tabs-bar">
+    <button class="mob-tab active" onclick="showPanel('chart')">四柱 สี่เสา</button>
+    <button class="mob-tab" onclick="showPanel('luck')">大运 วัยจร</button>
+    <button class="mob-tab" onclick="showPanel('year')">流年 รายปี</button>
+    <button class="mob-tab" onclick="showPanel('monthly')">流月 รายเดือน</button>
+    <button class="mob-tab" onclick="showPanel('elements')">五行 ธาตุ</button>
+    <button class="mob-tab" onclick="showPanel('personality')">นิสัย</button>
+    <button class="mob-tab" onclick="showPanel('career')">การงาน</button>
+    <button class="mob-tab" onclick="showPanel('finance')">การเงิน</button>
+  </div>
+
+  <div class="app-grid pt-4">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar card p-2 space-y-0.5">
+      <div class="sb-label">ทางลัด</div>
+      <button class="sb-btn active" onclick="showPanel('chart')"       id="sb-chart">      <span class="sb-ico">📊</span> พื้นดวงสี่เสา</button>
+      <button class="sb-btn"        onclick="showPanel('luck')"        id="sb-luck">       <span class="sb-ico">🔄</span> วัยจร 大运</button>
+      <button class="sb-btn"        onclick="showPanel('year')"        id="sb-year">       <span class="sb-ico">📅</span> รายปี 流年</button>
+      <button class="sb-btn"        onclick="showPanel('monthly')"     id="sb-monthly">    <span class="sb-ico">🗓</span> รายเดือน 流月</button>
+      <button class="sb-btn"        onclick="showPanel('elements')"    id="sb-elements">   <span class="sb-ico">☯</span> Radar 五行</button>
+      <div class="sb-div"></div>
+      <div class="sb-label">วิเคราะห์ฟรี</div>
+      <button class="sb-btn"        onclick="showPanel('personality')" id="sb-personality"><span class="sb-ico">🌟</span> นิสัยและตัวตน</button>
+      <button class="sb-btn"        onclick="showPanel('career')"      id="sb-career">     <span class="sb-ico">💼</span> การงานและอาชีพ</button>
+      <button class="sb-btn"        onclick="showPanel('finance')"     id="sb-finance">    <span class="sb-ico">💰</span> การเงินและทรัพย์</button>
+      <div class="sb-div"></div>
+      <a href="#premium" class="sb-pro">✦ Pro — วิเคราะห์เชิงลึก 299฿</a>
+      <p class="text-center text-xs pb-2" style="color:var(--muted2)">PDF · เสียง · Life Path</p>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="space-y-5 min-w-0">
+
+      <!-- FORM -->
+      <div id="form-card" class="card p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h2 class="text-xl font-bold gold">กรอกข้อมูลวันเกิด</h2>
+            <p class="text-xs muted mt-1">คำนวณบนเครื่องของคุณ — ไม่ส่งข้อมูลออก</p>
+          </div>
+          <div class="text-3xl opacity-25">八</div>
+        </div>
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="lbl">ชื่อ (ไม่บังคับ)</label><input type="text" id="inp-name" placeholder="ชื่อของคุณ" class="inp"></div>
+            <div>
+              <label class="lbl">เพศ</label>
+              <div class="flex gap-5 mt-2.5">
+                <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="radio" name="gender" value="male" checked class="accent-yellow-500 w-4 h-4"> ♂ ชาย</label>
+                <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="radio" name="gender" value="female" class="accent-yellow-500 w-4 h-4"> ♀ หญิง</label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="lbl">วันเดือนปีเกิด</label>
+            <div class="grid grid-cols-3 gap-2">
+              <select id="inp-day" class="inp"></select>
+              <select id="inp-month" class="inp"></select>
+              <select id="inp-year" class="inp"></select>
+            </div>
+          </div>
+          <div>
+            <label class="lbl">เวลาเกิด <span style="color:var(--muted2);font-weight:400">(ถ้าทราบ)</span></label>
+            <div class="grid grid-cols-2 gap-2">
+              <select id="inp-hour" class="inp"></select>
+              <select id="inp-minute" class="inp"></select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="lbl">ประเทศ</label>
+              <select id="inp-country" onchange="handleCountryChange()" class="inp">
+                <option value="TH">ไทย (UTC+7)</option>
+                <option value="CN">จีน (UTC+8)</option>
+                <option value="JP">ญี่ปุ่น (UTC+9)</option>
+                <option value="KR">เกาหลีใต้ (UTC+9)</option>
+                <option value="TW">ไต้หวัน (UTC+8)</option>
+                <option value="SG">สิงคโปร์ (UTC+8)</option>
+                <option value="GB">UK (UTC+0)</option>
+                <option value="US_EST">US East (-5)</option>
+                <option value="US_PST">US West (-8)</option>
+              </select>
+            </div>
+            <div id="section-province">
+              <label class="lbl">จังหวัด</label>
+              <select id="inp-province" class="inp"></select>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 p-3 rounded-lg text-xs" style="background:rgba(212,160,23,.04);border:1px solid var(--border2)">
+            <span class="gold font-semibold">✦ True Solar Time (真太陽時)</span>
+            <span class="muted">— เปิดใช้งานอัตโนมัติตามลองจิจูดจังหวัด</span>
+          </div>
+          <button onclick="calculateBazi()" id="calc-btn"
+            class="w-full py-4 gold-bg text-black font-bold text-lg rounded-xl hover:opacity-90 transition active:scale-[.98]"
+            style="box-shadow:0 4px 28px rgba(212,160,23,.35)">
+            วิเคราะห์ดวง Ba Zi ✦
+          </button>
+        </div>
+      </div>
+
+      <!-- LOADING -->
+      <div id="loading" class="hidden card p-10 text-center">
+        <div class="text-5xl spin inline-block mb-4">☯</div>
+        <div class="gold text-lg font-semibold">กำลังคำนวณดวงชะตา...</div>
+        <div class="text-sm muted mt-1">ใช้ tyme4ts engine</div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="results-area" class="hidden space-y-5">
+
+        <div id="res-header" class="card p-5 anim"></div>
+
+        <!-- ① สี่เสา -->
+        <div id="panel-chart" class="result-panel show card p-5 anim" style="animation-delay:.05s">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-bold gold">① 四柱八字 — พื้นดวงสี่เสา</h2>
+              <p class="text-xs muted mt-0.5">天干 · 地支 · 藏干 · 纳音 · 十二長生</p>
+            </div>
+          </div>
+          <div id="res-chart"></div>
+        </div>
+
+        <!-- ② วัยจร -->
+        <div id="panel-luck" class="result-panel card p-5 anim" style="animation-delay:.1s">
+          <div class="flex items-center justify-between mb-1">
+            <h2 class="text-base font-bold gold">② 大运 — วัยจรทุก 10 ปี</h2>
+          </div>
+          <p class="text-xs muted mb-4" id="lp-info"></p>
+          <div id="res-luck"></div>
+        </div>
+
+        <!-- ③ รายปี -->
+        <div id="panel-year" class="result-panel card p-5 anim" style="animation-delay:.15s">
+          <div class="flex items-center justify-between mb-1">
+            <h2 class="text-base font-bold gold">③ 流年 — รายปี 2020–2035</h2>
+            <span class="text-xs muted">ปัจจุบัน <span class="gold font-bold">2026</span></span>
+          </div>
+          <p class="text-xs muted mb-4">สีตัวอักษร = ธาตุ · Ten God เทียบกับ Day Master · วงเล็บ = อายุ</p>
+          <div id="res-year"></div>
+        </div>
+
+        <!-- ④ รายเดือน -->
+        <div id="panel-monthly" class="result-panel card p-5 anim" style="animation-delay:.18s">
+          <div class="flex items-center justify-between mb-1">
+            <h2 class="text-base font-bold gold">④ 流月 — รายเดือน ปี 2026</h2>
+            <span class="text-xs muted">ตาม 節氣</span>
+          </div>
+          <p class="text-xs muted mb-4">干支 + สิบเทพรายเดือนเทียบกับ Day Master ของคุณ</p>
+          <div id="res-monthly"></div>
+        </div>
+
+        <!-- ⑤ 五行 Radar -->
+        <div id="panel-elements" class="result-panel card p-5 anim" style="animation-delay:.2s">
+          <h2 class="text-base font-bold gold mb-4">⑤ 五行 — สมดุลธาตุทั้งห้า</h2>
+          <div id="res-elements"></div>
+        </div>
+
+        <!-- ⑥ นิสัย -->
+        <div id="panel-personality" class="result-panel card p-5 anim" style="animation-delay:.22s">
+          <h2 class="text-base font-bold gold mb-4">⑥ นิสัยและตัวตน — Day Master Analysis</h2>
+          <div id="res-personality"></div>
+        </div>
+
+        <!-- ⑦ การงาน -->
+        <div id="panel-career" class="result-panel card p-5 anim" style="animation-delay:.25s">
+          <h2 class="text-base font-bold gold mb-4">⑦ การงานและอาชีพ</h2>
+          <div id="res-career"></div>
+        </div>
+
+        <!-- ⑧ การเงิน -->
+        <div id="panel-finance" class="result-panel card p-5 anim" style="animation-delay:.28s">
+          <h2 class="text-base font-bold gold mb-4">⑧ การเงินและทรัพย์สมบัติ</h2>
+          <div id="res-finance"></div>
+        </div>
+
+        <!-- CTA -->
+        <div class="card p-5 text-center anim" style="animation-delay:.32s;border-color:rgba(212,160,23,.3)">
+          <p class="text-sm muted mb-3">ต้องการวิเคราะห์เชิงลึก + PDF + ไฟล์เสียง?</p>
+          <a href="#premium" class="inline-block px-8 py-3 gold-bg text-black font-bold rounded-full hover:opacity-90 transition">
+            แพ็กเกจ Pro 299 บาท ↓
+          </a>
+        </div>
+
+      </div><!-- /results-area -->
+    </main>
+  </div>
+</section>
+
+<!-- ══════════════ KNOWLEDGE ══════════════ -->
+<section id="knowledge" class="py-16 px-4" style="border-top:1px solid var(--border)">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="text-2xl font-bold text-center gold mb-2">ทำไมบางคนรวยง่าย บางคนทำมากแต่ได้น้อย?</h2>
+    <p class="text-center text-sm muted mb-10">คำตอบอยู่ในแผนที่ชีวิตที่จักรวาลมอบให้คุณตั้งแต่วินาทีแรกที่เกิด</p>
+    <div class="space-y-3">
+
+      <details class="card overflow-hidden">
+        <summary class="flex items-center justify-between p-5 font-semibold hover:bg-white/5 transition">
+          <span class="text-sm leading-snug">
+            <span class="gold font-black mr-2">大运</span>
+            "ทำไมบางคนขยันแทบตาย แต่ไม่รวย ในขณะที่บางคนทำน้อย กลับได้มาก?"
+          </span>
+          <span class="chev muted flex-shrink-0 ml-3">▾</span>
+        </summary>
+        <div class="px-5 pb-6 pt-4 space-y-4" style="border-top:1px solid var(--border2)">
+          <p class="text-sm leading-relaxed" style="color:#c8b880">
+            เพราะแต่ละคนมี <span class="text-white font-semibold">"รอบจังหวะชีวิต (大运 Da Yun)"</span> ที่ไม่เหมือนกัน
+            การขยันในช่วงที่ดวงตกเปรียบเหมือนการพายเรือทวนน้ำ — เหนื่อยแทบขาดใจแต่ไปได้ทีละนิด
+          </p>
+          <div class="inset rounded-xl p-4">
+            <p class="text-sm leading-relaxed muted">
+              การรู้ <span class="gold font-semibold">แผนที่ชีวิต Ba Zi</span> ทำให้เราเลือก "ออกแรง" ให้ถูกจังหวะ —
+              ช่วงไหนกระแสเชี่ยวให้หลบ ช่วงไหนลมส่งให้กางใบเรือเต็มที่
+              นั่นคือเหตุผลว่าทำไมบางคนทำงานน้อยกว่าแต่ก้าวหน้ากว่า
+            </p>
+          </div>
+          <a href="#app" class="inline-block text-xs gold hover:underline">→ ดูวัยจรของคุณเลย</a>
+        </div>
+      </details>
+
+      <details class="card overflow-hidden">
+        <summary class="flex items-center justify-between p-5 font-semibold hover:bg-white/5 transition">
+          <span class="text-sm leading-snug">
+            <span class="gold font-black mr-2">命图</span>
+            "จะดีกว่าไหม ถ้าชีวิตมีแผนที่และเข็มทิศ ไม่ต้องเสียเวลาลองผิดในทางที่ตัน?"
+          </span>
+          <span class="chev muted flex-shrink-0 ml-3">▾</span>
+        </summary>
+        <div class="px-5 pb-6 pt-4 space-y-4" style="border-top:1px solid var(--border2)">
+          <p class="text-sm leading-relaxed" style="color:#c8b880">
+            การรู้ Ba Zi ตลอดชีวิตคือการเห็น <span class="text-white font-semibold">"ภูมิประเทศของโชคชะตา"</span> —
+            รู้ว่าช่วงอายุไหนมีหลุมพราง ช่วงไหนเป็นทางด่วนสู่ความสำเร็จ
+          </p>
+          <div class="inset rounded-xl p-4">
+            <p class="text-sm leading-relaxed muted">
+              การรู้ล่วงหน้าไม่ได้มีไว้ให้กลัว แต่มีไว้ให้ <span class="text-white">"เตรียมพร้อม"</span>
+              เมื่อโอกาสมาถึง คุณจะคว้าได้ทันที ไม่ใช่เพิ่งมาเริ่มตั้งตัวในวันที่โอกาสหลุดมือไปแล้ว
+            </p>
+          </div>
+          <a href="#app" class="inline-block text-xs gold hover:underline">→ เปิดแผนที่ชีวิตของคุณ</a>
+        </div>
+      </details>
+
+      <details class="card overflow-hidden">
+        <summary class="flex items-center justify-between p-5 font-semibold hover:bg-white/5 transition">
+          <span class="text-sm leading-snug">
+            <span class="gold font-black mr-2">十神</span>
+            "คุณกำลังฝืนเป็นปลาที่พยายามปีนต้นไม้อยู่หรือเปล่า?"
+          </span>
+          <span class="chev muted flex-shrink-0 ml-3">▾</span>
+        </summary>
+        <div class="px-5 pb-6 pt-4 space-y-4" style="border-top:1px solid var(--border2)">
+          <p class="text-sm leading-relaxed" style="color:#c8b880">
+            ระบบ <span class="text-white font-semibold">สิบเทพ (十神 Shi Shen)</span> ในดวงจีนจะบอกว่าคุณมีศักยภาพที่แท้จริงแบบไหน —
+            บางคนเก่งบริหารคน บางคนเก่งสร้างสรรค์ บางคนเก่งพลิกแพลงสถานการณ์
+          </p>
+          <div class="inset rounded-xl p-4">
+            <p class="text-sm leading-relaxed muted">
+              การพยายามทำในสิ่งที่ <span class="text-white">ไม่ใช่ธาตุแท้</span> ของตัวเองคือการเผาผลาญพลังงานอย่างสิ้นเปลือง
+              Ba Zi ช่วยให้คุณกลับมาเป็นตัวเองในเวอร์ชันที่ทรงพลังที่สุด
+            </p>
+          </div>
+          <a href="#app" class="inline-block text-xs gold hover:underline">→ ค้นพบศักยภาพที่แท้จริงของคุณ</a>
+        </div>
+      </details>
+
+      <details class="card overflow-hidden">
+        <summary class="flex items-center justify-between p-5 font-semibold hover:bg-white/5 transition">
+          <span class="text-sm leading-snug">
+            <span class="gold font-black mr-2">五行</span>
+            "Ba Zi ไม่ใช่เรื่องงมงาย แต่คือการเข้าใจตัวเองอย่างลึกซึ้งที่สุดในชีวิต"
+          </span>
+          <span class="chev muted flex-shrink-0 ml-3">▾</span>
+        </summary>
+        <div class="px-5 pb-6 pt-4 space-y-4" style="border-top:1px solid var(--border2)">
+          <p class="text-sm leading-relaxed" style="color:#c8b880">
+            Ba Zi คือการวิเคราะห์ความสัมพันธ์ของพลังงานธาตุทั้งห้า (五行) ที่ส่งผลต่อพฤติกรรมและการตัดสินใจตลอดชีวิต
+          </p>
+          <div class="inset rounded-xl p-4 space-y-2">
+            <div class="flex items-start gap-2 text-sm muted">
+              <span class="gold flex-shrink-0">✦</span>
+              <span>รู้ว่าปีนี้ดวงการเงินเสี่ยง → ไม่ลงทุนสุ่มเสี่ยง รักษาทุนไว้ก่อน</span>
+            </div>
+            <div class="flex items-start gap-2 text-sm muted">
+              <span class="gold flex-shrink-0">✦</span>
+              <span>รู้ว่าปีนี้ดวงความสัมพันธ์เด่น → เน้นสร้าง Network และพันธมิตรธุรกิจ</span>
+            </div>
+            <div class="flex items-start gap-2 text-sm muted">
+              <span class="gold flex-shrink-0">✦</span>
+              <span>นี่คือการใช้ชีวิตแบบ <span class="text-white font-semibold">เชิงรุก</span> — ไม่ใช่การรอรับโชคชะตา</span>
+            </div>
+          </div>
+          <a href="#app" class="inline-block text-xs gold hover:underline">→ วิเคราะห์ดวงของคุณเลยตอนนี้ ฟรี</a>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PREMIUM ══════════════ -->
+<section id="premium" class="py-16 px-4">
+  <div class="max-w-3xl mx-auto">
+    <div class="prem-bg rounded-3xl p-8 sm:p-12" style="border:1px solid rgba(212,160,23,.3);box-shadow:0 0 80px rgba(212,160,23,.07)">
+      <div class="text-center mb-10">
+        <div class="inline-block border rounded-full px-4 py-1 text-xs font-semibold mb-4 tracking-widest uppercase"
+             style="border-color:var(--border);color:var(--gold);background:rgba(212,160,23,.08)">✦ Pro Service</div>
+        <h2 class="text-3xl font-bold text-white mb-3">ยกระดับการพยากรณ์<br>ให้ลึกซึ้งกว่าเดิม</h2>
+        <p class="muted">วิเคราะห์เชิงลึกโดยผู้เชี่ยวชาญด้าน Ba Zi</p>
+      </div>
+      <div class="rounded-2xl p-6 mb-8" style="background:rgba(0,0,0,.5);border:1px solid rgba(212,160,23,.2)">
+        <div class="flex items-center justify-center gap-3 mb-2">
+          <span class="text-6xl font-black gold">299</span>
+          <div>
+            <div class="text-2xl text-white">บาท</div>
+            <div style="text-decoration:line-through;color:var(--muted);font-size:.85rem">ปกติ 499฿</div>
+          </div>
+        </div>
+        <div class="text-center mb-5">
+          <span class="inline-block px-4 py-1 rounded-full text-xs font-bold" style="background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)">
+            🔥 โปรโมชั่น — ถึงสิ้นเดือนนี้เท่านั้น
+          </span>
+        </div>
+        <ul class="space-y-3 text-sm text-white">
+          <li class="check">วิเคราะห์ <strong>ภาพรวมปี 2026</strong> อย่างละเอียด — การงาน การเงิน ความรัก สุขภาพ</li>
+          <li class="check">วิเคราะห์ <strong>ดวงชะตาตลอดชีวิต (Life Path)</strong> ทุกช่วง 10 ปี</li>
+          <li class="check">สรุปผลเป็น <strong>PDF + PowerPoint</strong> ดีไซน์สวยงาม</li>
+          <li class="check"><strong>ไฟล์เสียงวิเคราะห์</strong> เฉพาะบุคคล (Personalized Audio)</li>
+          <li class="check">วิเคราะห์สิบเทพ + Hidden Stems ทุกหลักอย่างละเอียด</li>
+          <li class="check">คำแนะนำ อาชีพ คู่ครองที่เหมาะสม ธาตุเสริมดวง</li>
+          <li class="check">จัดส่งภายใน <strong>2 วันทำการ</strong></li>
+        </ul>
+      </div>
+      <div class="flex justify-center">
+        <a href="https://line.me/ti/p/l25exED9bl" target="_blank" rel="noopener"
+           class="w-full max-w-sm text-center py-4 px-8 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl text-xl transition"
+           style="box-shadow:0 4px 24px rgba(22,163,74,.35)">
+          💬 สอบถาม Add Friend Line
+        </a>
+      </div>
+      <p class="text-center text-xs muted mt-4">PromptPay · QR Code · LINE Pay</p>
+    </div>
+  </div>
+</section>
+
+<footer class="py-8 px-4 text-center text-sm muted" style="border-top:1px solid var(--border)">
+  <div class="text-2xl font-black gold mb-2">八字 BaZi</div>
+  <p>ข้อมูลทั้งหมดประมวลผลบนเครื่องของคุณ ไม่มีการส่งข้อมูลออก</p>
+  <p class="text-xs mt-1 opacity-50">* เพื่อความบันเทิงและข้อมูลเบื้องต้นเท่านั้น</p>
+</footer>
+
+<script src="dist/engine.bundle.js"></script>
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+const BD = (() => {
+  const STEMS    = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  const BRANCHES = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  const BR_ANIMAL= ['หนู','วัว','เสือ','กระต่าย','มังกร','งู','ม้า','แพะ','ลิง','ไก่','สุนัข','หมู'];
+  const STEM_E   = [0,0,1,1,2,2,3,3,4,4];
+  const BR_E     = [4,2,0,0,2,1,1,2,3,3,2,4];
+  const STEM_YIN = [0,1,0,1,0,1,0,1,0,1];
+  const BR_YIN   = [0,1,0,1,0,1,0,1,0,1,0,1];
+  const ELEM_TH  = ['ไม้','ไฟ','ดิน','ทอง','น้ำ'];
+  const ELEM_CN  = ['木','火','土','金','水'];
+  const ELEM_ICO = ['🌿','🔥','⛰️','⚙️','💧'];
+  const ELEM_CLR = ['#6ee79a','#f87171','#b8733a','#d4a017','#7dd3fc'];
+  const ELEM_CLS = ['tw','tf','te','tm','ta'];
+  const NAYIN    = ['海中金','炉中火','大林木','路旁土','剑锋金','山头火','涧下水','城头土','白蜡金','杨柳木','泉中水','屋上土','霹雳火','松柏木','长流水','沙中金','山下火','平地木','壁上土','金箔金','覆灯火','天河水','大驿土','钗钏金','桑柘木','大溪水','沙中土','天上火','石榴木','大海水'];
+  const HIDDEN   = [[9],[5,9,7],[0,2,4],[1],[4,1,9],[2,6,4],[3,5],[5,3,1],[6,8,4],[7],[4,7,3],[8,0]];
+  const LS       = ['長生','沐浴','冠帶','臨官','帝旺','衰','病','死','墓','絕','胎','養'];
+  const LS_STR   = {'長生':'s','沐浴':'m','冠帶':'s','臨官':'s','帝旺':'s','衰':'m','病':'w','死':'w','墓':'w','絕':'w','胎':'m','養':'m'};
+  const BIRTH_BR = [11,6,2,9,2,9,5,0,8,3];
+  const TG_CN    = [['比肩','劫财'],['食神','伤官'],['偏财','正财'],['七杀','正官'],['偏印','正印']];
+  const TG_CAT   = [['c','c'],['o','o'],['w','w'],['p','p'],['r','r']];
+  const TG_TH    = {'比肩':'เพื่อน','劫财':'ปล้นทรัพย์','食神':'เทพอาหาร','伤官':'ทำลายเจ้านาย','偏财':'ทรัพย์อ้อม','正财':'ทรัพย์ตรง','七杀':'นายทหาร','正官':'เจ้านายตรง','偏印':'อินอ้อม','正印':'อินตรง'};
+  const CAT_CLR  = {c:'#6ee79a',o:'#fbbf24',w:'#34d399',p:'#a78bfa',r:'#60a5fa'};
+  const SOLAR_TERMS = [[1,6,12,1],[2,4,1,2],[3,6,2,3],[4,5,3,4],[5,6,4,5],[6,6,5,6],[7,7,6,7],[8,7,7,8],[9,8,8,9],[10,8,9,10],[11,7,10,11],[12,7,11,0]];
+  const THAI_PROV = [
+    ['กรุงเทพมหานคร',100.50],['กระบี่',98.91],['กาญจนบุรี',99.53],['กาฬสินธุ์',103.51],
+    ['กำแพงเพชร',99.52],['ขอนแก่น',102.83],['จันทบุรี',102.10],['ฉะเชิงเทรา',101.08],
+    ['ชลบุรี',100.98],['ชัยนาท',100.13],['ชัยภูมิ',102.03],['ชุมพร',99.18],
+    ['เชียงราย',99.83],['เชียงใหม่',98.98],['ตรัง',99.62],['ตราด',102.52],
+    ['ตาก',99.13],['นครนายก',101.21],['นครปฐม',100.04],['นครพนม',104.77],
+    ['นครราชสีมา',102.10],['นครศรีธรรมราช',100.00],['นครสวรรค์',100.07],
+    ['นนทบุรี',100.51],['นราธิวาส',101.82],['น่าน',100.77],['บึงกาฬ',103.65],
+    ['บุรีรัมย์',103.10],['ปทุมธานี',100.53],['ประจวบคีรีขันธ์',99.80],
+    ['ปราจีนบุรี',101.37],['ปัตตานี',101.30],['พระนครศรีอยุธยา',100.57],
+    ['พะเยา',100.20],['พัทลุง',100.07],['พิจิตร',100.35],['พิษณุโลก',100.26],
+    ['เพชรบุรี',99.95],['เพชรบูรณ์',101.16],['แพร่',100.14],['ภูเก็ต',98.40],
+    ['มหาสารคาม',103.30],['มุกดาหาร',104.73],['แม่ฮ่องสอน',97.97],['ยโสธร',104.15],
+    ['ยะลา',101.28],['ร้อยเอ็ด',103.65],['ระนอง',98.64],['ระยอง',101.28],
+    ['ราชบุรี',99.82],['ลพบุรี',100.65],['ลำปาง',99.50],['ลำพูน',99.00],
+    ['เลย',101.72],['ศรีสะเกษ',104.32],['สกลนคร',104.15],['สงขลา',100.60],
+    ['สตูล',100.07],['สมุทรปราการ',100.60],['สมุทรสงคราม',100.00],['สมุทรสาคร',100.27],
+    ['สระแก้ว',102.07],['สระบุรี',100.91],['สิงห์บุรี',100.40],['สุโขทัย',99.82],
+    ['สุพรรณบุรี',100.13],['สุราษฎร์ธานี',99.33],['สุรินทร์',103.50],['หนองคาย',102.74],
+    ['หนองบัวลำภู',102.44],['อ่างทอง',100.46],['อำนาจเจริญ',104.63],['อุดรธานี',102.80],
+    ['อุตรดิตถ์',100.10],['อุทัยธานี',100.02],['อุบลราชธานี',104.87],
+  ].sort((a,b)=>a[0].localeCompare(b[0],'th'));
+  return { STEMS, BRANCHES, BR_ANIMAL, STEM_E, BR_E, STEM_YIN, BR_YIN, ELEM_TH, ELEM_CN, ELEM_ICO, ELEM_CLR, ELEM_CLS, NAYIN, HIDDEN, LS, LS_STR, BIRTH_BR, TG_CN, TG_CAT, TG_TH, CAT_CLR, SOLAR_TERMS, THAI_PROV };
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════
+function sexPos(s,b){ const d=((b-s)%12+12)%12; return(s+10*((5*(d>>1))%6))%60; }
+function getNayin(si,bi){ return BD.NAYIN[Math.floor(sexPos(si,bi)/2)]; }
+function getLS(dmIdx,bi){ const birth=BD.BIRTH_BR[dmIdx],yang=BD.STEM_YIN[dmIdx]===0; return yang?(bi-birth+12)%12:(birth-bi+12)%12; }
+function getTG(dmIdx,ti){ const rel=(BD.STEM_E[ti]-BD.STEM_E[dmIdx]+5)%5,same=BD.STEM_YIN[dmIdx]===BD.STEM_YIN[ti]; return{cn:BD.TG_CN[rel][same?0:1],cat:BD.TG_CAT[rel][same?0:1]}; }
+
+// ═══════════════════════════════════════════════════════════════
+// CONVERT — BaziResult → internal
+// ═══════════════════════════════════════════════════════════════
+function convertResult(r, name, solarNote) {
+  const ec=r.eightChars, es=r.elementStrength, inp=r.input;
+  const toP = p => p ? {stemIdx:p.stem.index, branchIdx:p.branch.index} : null;
+  const baziYear = (inp.month<2||(inp.month===2&&inp.day<4)) ? inp.year-1 : inp.year;
+  const YP={...toP(ec.year),baziYear}, MP=toP(ec.month), DP=toP(ec.day), HP=ec.hour?toP(ec.hour):null;
+  const hasTime = inp.hour>=0&&inp.minute>=0;
+  return {
+    name, solarNote, gender:inp.gender,
+    year:inp.year, month:inp.month, day:inp.day,
+    hour:hasTime?inp.hour:null, minute:hasTime?inp.minute:null, hasTime,
+    YP, MP, DP, HP, dmIdx:ec.dayMaster.index,
+    ec:[es.Wood,es.Fire,es.Earth,es.Metal,es.Water],
+    lpData:{
+      startAge:r.luckPillars.startAge, startDate:r.luckPillars.startDate,
+      isForward:r.luckPillars.direction==='forward',
+      pillars:r.luckPillars.pillars.map(lp=>({stemIdx:lp.pillar.stem.index,branchIdx:lp.pillar.branch.index,age:lp.startAge,startYear:lp.startYear})),
+    },
+    yearCycle:r.annualPillars.map(ap=>({year:ap.year,stemIdx:ap.pillar.stem.index,branchIdx:ap.pillar.branch.index})),
+    monthlyPillars:r.monthlyPillars.map(mp=>({month:mp.month,stemIdx:mp.pillar.stem.index,branchIdx:mp.pillar.branch.index})),
+    baziString:ec.baziString, zodiac:ec.zodiac, fetalOrigin:ec.fetalOrigin, ownSign:ec.ownSign,
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+
+function renderPillar(p, dmIdx, isDM, label, sub) {
+  if (!p) return `
+    <div>
+      <div class="bz-hdr muted">${label}<br><small style="opacity:.4">${sub}</small></div>
+      <div class="tg tg-dm" style="opacity:.3;text-align:center">—</div>
+      <div class="bz-cell inset" style="min-height:90px;display:flex;align-items:center;justify-content:center"><span class="muted" style="font-size:.75rem">ไม่ทราบ</span></div>
+      <div class="ls ls-m">—</div>
+      <div class="bz-cell inset" style="min-height:90px;display:flex;align-items:center;justify-content:center"><span class="muted" style="font-size:.75rem">—</span></div>
+    </div>`;
+
+  const sE=BD.STEM_E[p.stemIdx], bE=BD.BR_E[p.branchIdx];
+  const sCls=BD.ELEM_CLS[sE], bCls=BD.ELEM_CLS[bE], glow=isDM?' dm-g':'';
+
+  // Ten God
+  let tgHtml;
+  if(isDM){
+    tgHtml=`<div class="tg tg-dm">日主 Day Master</div>`;
+  } else {
+    const g=getTG(dmIdx,p.stemIdx);
+    tgHtml=`<div class="tg tg-${g.cat}">${g.cn} <span style="opacity:.65;font-size:.62em">${BD.TG_TH[g.cn]||''}</span></div>`;
+  }
+
+  // Life stage
+  const lsI=getLS(dmIdx,p.branchIdx), lsN=BD.LS[lsI], lsT=BD.LS_STR[lsN]||'m';
+
+  // Hidden stems
+  const hsHtml=BD.HIDDEN[p.branchIdx].map(si=>{
+    const g=getTG(dmIdx,si), c=BD.ELEM_CLR[BD.STEM_E[si]];
+    return `<span class="hs" style="background:${c}18;color:${c}" title="${g.cn}">${BD.STEMS[si]}</span>`;
+  }).join('');
+
+  return `
+    <div>
+      <div class="bz-hdr${isDM?' dm':''}">${label}<br><small style="opacity:.45">${sub}</small></div>
+      ${tgHtml}
+      <div class="bz-cell ${sCls}${glow}">
+        <div class="bz-char">${BD.STEMS[p.stemIdx]}</div>
+        <div class="bz-elem">${BD.ELEM_CN[sE]} ${BD.ELEM_TH[sE]}</div>
+        <div class="bz-polar">${BD.STEM_YIN[p.stemIdx]?'陰 หยิน':'陽 หยาง'}</div>
+      </div>
+      <div class="ls ls-${lsT}">${lsN}</div>
+      <div class="bz-cell ${bCls}${glow}">
+        <div class="bz-char">${BD.BRANCHES[p.branchIdx]}</div>
+        <div class="bz-elem">${BD.ELEM_CN[bE]} ${BD.ELEM_TH[bE]}</div>
+        <div class="bz-polar">${BD.BR_YIN[p.branchIdx]?'陰':'陽'} ${BD.BR_ANIMAL[p.branchIdx]}</div>
+      </div>
+      <div class="hs-row">${hsHtml}</div>
+      <div class="nayin">纳音 ${getNayin(p.stemIdx,p.branchIdx)}</div>
+    </div>`;
+}
+
+function renderChart(YP,MP,DP,HP,dmIdx){
+  const cols=[{p:YP,l:'年柱',s:'Year',dm:false},{p:MP,l:'月柱',s:'Month',dm:false},{p:DP,l:'日柱',s:'Day',dm:true},{p:HP,l:'时柱',s:'Hour',dm:false}];
+  return `
+    <div class="bz-grid">${cols.map(c=>renderPillar(c.p,dmIdx,c.dm,c.l,c.s)).join('')}</div>
+    <div class="flex flex-wrap gap-3 mt-4 text-xs muted">
+      <span>🟩 長生·冠帶·臨官·帝旺 = แข็ง</span>
+      <span>🟨 衰·胎·養 = ปานกลาง</span>
+      <span>🟥 病·死·墓·絕 = อ่อน</span>
+      <span class="gold">★ กรอบทอง = 日主</span>
+    </div>`;
+}
+
+function renderLuckPillars(lpData, birthYear, CY){
+  const {startAge,startDate,isForward,pillars}=lpData;
+  document.getElementById('lp-info').textContent=`เริ่มอายุ ${startAge} ปี · ${isForward?'วิ่งไปข้างหน้า (顺)':'วิ่งถอยหลัง (逆)'} · วันที่เริ่ม ${startDate||''}`;
+  const cards=pillars.map(lp=>{
+    const endYr=lp.startYear+9, active=lp.startYear<=CY&&CY<=endYr;
+    const sE=BD.STEM_E[lp.stemIdx],bE=BD.BR_E[lp.branchIdx];
+    const g=getTG(window._dmIdx||0,lp.stemIdx), c=BD.CAT_CLR[g.cat]||'#d4a017';
+    return `
+      <div class="lp-card${active?' lp-active':''}">
+        <div class="lp-age">อายุ ${lp.age}–${lp.age+9}<br><span style="font-size:.53rem;color:var(--gold)">${lp.startYear}–${endYr}</span></div>
+        <div class="lp-tg" style="color:${c};background:${c}14">${g.cn}</div>
+        <div class="lp-stem ${BD.ELEM_CLS[sE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[lp.stemIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[sE]};opacity:.75">${BD.ELEM_CN[sE]}</div></div>
+        <div class="lp-branch ${BD.ELEM_CLS[bE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[lp.branchIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[bE]};opacity:.75">${BD.BR_ANIMAL[lp.branchIdx]}</div></div>
+      </div>`;
+  }).join('');
+  return `<div class="lp-row">${cards}</div><p class="text-xs muted mt-3">★ กรอบทอง = วัยจรปัจจุบัน · สีบน stem = Ten God</p>`;
+}
+
+function renderYearCycle(years, dmIdx, CY, birthYear){
+  return `<div class="yc-grid">${years.map(y=>{
+    const sE=BD.STEM_E[y.stemIdx],bE=BD.BR_E[y.branchIdx];
+    const g=getTG(dmIdx,y.stemIdx),c=BD.CAT_CLR[g.cat]||'#d4a017';
+    const isCurr=y.year===CY,age=y.year-birthYear;
+    return `<div class="yc-card${isCurr?' yc-now':''}">
+      <div class="yc-y">${y.year}<span style="opacity:.45"> (${age})</span></div>
+      <div class="yc-pair"><span style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[y.stemIdx]}</span><span style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[y.branchIdx]}</span></div>
+      <div class="yc-tg" style="color:${c}">${g.cn}</div>
+      <div style="font-size:.52rem;color:var(--muted2)">${BD.ELEM_TH[sE]}·${BD.BR_ANIMAL[y.branchIdx]}</div>
+    </div>`;
+  }).join('')}</div><p class="text-xs muted mt-3">สี = ธาตุ · Ten God เทียบ Day Master · วงเล็บ = อายุ · ★ ปัจจุบัน</p>`;
+}
+
+function renderMonthly(months, dmIdx, CM){
+  const M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  return `<div class="mc-grid">${months.map(m=>{
+    const sE=BD.STEM_E[m.stemIdx],bE=BD.BR_E[m.branchIdx];
+    const g=getTG(dmIdx,m.stemIdx),c=BD.CAT_CLR[g.cat]||'#d4a017';
+    const isCurr=m.month===CM;
+    return `<div class="mc-card${isCurr?' mc-now':''}">
+      <div class="mc-m">${M[m.month-1]}${isCurr?' ◀':''}</div>
+      <div class="mc-pair"><span style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[m.stemIdx]}</span><span style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[m.branchIdx]}</span></div>
+      <div class="mc-tg" style="color:${c}">${g.cn}</div>
+      <div style="font-size:.52rem;color:var(--muted2)">${BD.ELEM_TH[sE]}</div>
+    </div>`;
+  }).join('')}</div><p class="text-xs muted mt-3">สี = ธาตุ · Ten God เทียบ Day Master · ◀ = เดือนปัจจุบัน</p>`;
+}
+
+function renderRadar(ec){
+  const total=ec.reduce((a,b)=>a+b,0)||1, max=Math.max(...ec,1);
+  const cx=110,cy=110,r=80,LABELS=['木','火','土','金','水'];
+  const A=Array.from({length:5},(_,i)=>-Math.PI/2+2*Math.PI*i/5);
+  const dPts=ec.map((v,i)=>[cx+r*(v/max)*Math.cos(A[i]),cy+r*(v/max)*Math.sin(A[i])]);
+  const oPts=A.map(a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)]);
+  const grid=[.25,.5,.75,1].map(t=>`<polygon points="${A.map(a=>`${cx+r*t*Math.cos(a)},${cy+r*t*Math.sin(a)}`).join(' ')}" fill="none" stroke="rgba(212,160,23,.1)" stroke-width="1"/>`).join('');
+  const axes=A.map(a=>`<line x1="${cx}" y1="${cy}" x2="${cx+r*Math.cos(a)}" y2="${cy+r*Math.sin(a)}" stroke="rgba(212,160,23,.12)" stroke-width="1"/>`).join('');
+  const labels=oPts.map((p,i)=>{
+    const lx=cx+(r+26)*Math.cos(A[i]),ly=cy+(r+26)*Math.sin(A[i]);
+    const pct=Math.round(ec[i]/total*100);
+    return `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="${BD.ELEM_CLR[i]}" font-weight="700">${LABELS[i]}</text>
+            <text x="${lx}" y="${ly+14}" text-anchor="middle" font-size="8" fill="rgba(212,160,23,.45)">${BD.ELEM_TH[i]}</text>
+            <text x="${lx}" y="${ly+24}" text-anchor="middle" font-size="9" fill="${BD.ELEM_CLR[i]}">${pct}%</text>`;
+  }).join('');
+  const dmE=ec.indexOf(Math.max(...ec)), wkE=ec.indexOf(Math.min(...ec));
+  const bars=ec.map((v,i)=>`
+    <div class="flex items-center gap-3">
+      <div style="width:58px;text-align:right;font-size:.78rem;font-weight:700;color:${BD.ELEM_CLR[i]}">${BD.ELEM_ICO[i]} ${BD.ELEM_CN[i]}</div>
+      <div class="flex-1 bar-track"><div class="bar-fill" data-w="${Math.round(v/max*100)}" style="width:0%;background:${BD.ELEM_CLR[i]}"></div></div>
+      <div style="font-size:.75rem;color:var(--muted);width:30px;text-align:right">${Math.round(v/total*100)}%</div>
+    </div>`).join('');
+  return `
+    <div class="flex flex-wrap gap-6 items-start">
+      <div style="flex-shrink:0">
+        <svg viewBox="0 0 220 220" style="max-width:220px;width:100%">
+          ${grid}${axes}
+          <polygon points="${dPts.map(p=>p.join(',')).join(' ')}" fill="rgba(212,160,23,.1)" stroke="var(--gold)" stroke-width="1.5"/>
+          ${dPts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${BD.ELEM_CLR[i]}"/>`).join('')}
+          ${labels}
+        </svg>
+      </div>
+      <div class="flex-1 space-y-3 min-w-[180px]" id="elem-bars">
+        ${bars}
+        <div class="inset p-3 rounded-lg mt-4 text-xs">
+          <div class="flex justify-between mb-1.5"><span class="muted">ธาตุเด่น</span><span style="color:${BD.ELEM_CLR[dmE]};font-weight:700">${BD.ELEM_ICO[dmE]} ${BD.ELEM_CN[dmE]} ${BD.ELEM_TH[dmE]}</span></div>
+          <div class="flex justify-between"><span class="muted">ธาตุขาด</span><span style="color:${BD.ELEM_CLR[wkE]};font-weight:700">${BD.ELEM_ICO[wkE]} ${BD.ELEM_CN[wkE]} ${BD.ELEM_TH[wkE]}</span></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ─── Analysis ───
+const DM_DATA=[
+  {icon:'🌲',name:'甲木 — ไม้หยาง',p:'ผู้นำตามธรรมชาติ ตรงไปตรงมา มีอุดมการณ์สูง เหมือนต้นไม้ใหญ่ที่เติบโตตรงขึ้นสู่ฟ้า มีความมุ่งมั่น ไม่ยอมแพ้ง่าย เป็นหลักพิงของผู้อื่น',c:'เหมาะกับงานบริหาร การเมือง วิศวกรรม งานที่ต้องการความเป็นผู้นำและเป้าหมายชัดเจน',f:'มักมีแผนระยะยาวสะสมทรัพย์ ไม่ชอบความเสี่ยงสูง เน้นลงทุนที่มั่นคง',str:'ภาวะผู้นำ · มุ่งมั่น · ซื่อสัตย์',wk:'ดื้อรั้น · ขาดความยืดหยุ่น'},
+  {icon:'🌿',name:'乙木 — ไม้หยิน',p:'ยืดหยุ่น ปรับตัวเก่ง มีเสน่ห์ เหมือนเถาวัลย์ที่พันรอบสิ่งต่างๆ อย่างงดงาม มีความสร้างสรรค์สูง รักสวยงาม ทักษะสื่อสารดี',c:'เหมาะกับงานศิลปะ ออกแบบ การตลาด ที่ปรึกษา งานสร้างสรรค์',f:'สร้างเครือข่ายเพื่อโอกาสทางการเงิน อาจได้รับทรัพย์จากคนอื่น',str:'ยืดหยุ่น · สร้างสรรค์ · เสน่ห์',wk:'ลังเลใจ · พึ่งพาผู้อื่น'},
+  {icon:'☀️',name:'丙火 — ไฟหยาง',p:'กล้าหาญ ร่าเริง ใจกว้าง เหมือนดวงอาทิตย์ที่ส่องสว่างทั่วทิศ มีพลังงานสูง เป็นที่ชื่นชอบ ชอบเป็นศูนย์กลางความสนใจ',c:'เหมาะกับงานบันเทิง การขาย การเมือง งานสื่อสารสาธารณะ',f:'รายได้จากหลายทาง โอกาสมาจากสังคม ระวังใช้จ่ายเกินตัว',str:'กล้าหาญ · พลังงานสูง · ริเริ่ม',wk:'หุนหัน · อีโก้สูง'},
+  {icon:'🕯️',name:'丁火 — ไฟหยิน',p:'ฉลาด ละเอียดอ่อน น่าเชื่อถือ เหมือนเทียนในความมืด มีความอบอุ่น ใส่ใจรายละเอียด เป็นที่พึ่งของผู้อื่น',c:'เหมาะกับงานวิจัย สุขภาพ นักเขียน ครู จิตวิทยา',f:'ระมัดระวังการใช้จ่าย วางแผนการเงินได้ดี แต่อาจพลาดโอกาส',str:'ฉลาด · ละเอียดอ่อน · น่าเชื่อถือ',wk:'กังวลมาก · ขาดความมั่นใจ'},
+  {icon:'🏔️',name:'戊土 — ดินหยาง',p:'มั่นคง น่าเชื่อถือ รอบคอบ เหมือนภูเขาตั้งตระหง่าน เป็นหลักพิง อดทนสูง ปกป้องคนที่รัก มองการณ์ไกล',c:'เหมาะกับอสังหาริมทรัพย์ บริหาร ก่อสร้าง งานรัฐบาล',f:'สะสมทรัพย์อย่างมั่นคง ชอบอสังหาฯ และลงทุนระยะยาว',str:'มั่นคง · อดทน · น่าเชื่อถือ',wk:'เฉื่อยชา · ปรับตัวช้า'},
+  {icon:'🌱',name:'己土 — ดินหยิน',p:'เอาใจใส่ ดูแลผู้อื่น อ่อนโยน เหมือนดินอุดมสมบูรณ์ สร้างความสัมพันธ์ที่ดี มีความอ่อนน้อมถ่อมตน',c:'เหมาะกับงานพยาบาล ครู สังคมสงเคราะห์ บริการ',f:'มักใช้จ่ายเพื่อผู้อื่น ควรวางแผนการเงินเพื่อตนเองบ้าง',str:'เอาใจใส่ · อ่อนโยน · ดูแลดี',wk:'เสียสละตัวเองเกิน · กังวลมาก'},
+  {icon:'⚔️',name:'庚金 — ทองหยาง',p:'แข็งแกร่ง ตรงไปตรงมา มีหลักการ เหมือนดาบคมแข็งแกร่ง ยุติธรรม กล้าตัดสินใจ ไม่ยอมประนีประนอมในสิ่งผิด',c:'เหมาะกับงานทหาร ตำรวจ กฎหมาย การเงิน วิศวกรรม',f:'วินัยทางการเงินสูง ชอบลงทุนที่ชัดเจน โอกาสจากโลหะ เทคโนโลยี',str:'แข็งแกร่ง · ยุติธรรม · กล้าตัดสินใจ',wk:'แข็งกร้าว · ขาดความยืดหยุ่น'},
+  {icon:'💎',name:'辛金 — ทองหยิน',p:'ละเอียดอ่อน มีรสนิยม ฉลาดหลักแหลม เหมือนอัญมณีงดงาม ชอบความสมบูรณ์แบบ วิเคราะห์เก่ง สังเกตดี',c:'เหมาะกับงานออกแบบ เครื่องประดับ กฎหมาย การแพทย์ นักวิเคราะห์',f:'หาช่องทางสร้างรายได้เก่ง แต่อาจเสียเงินกับของสวย ควรมีวินัยออม',str:'รสนิยมดี · ละเอียดอ่อน · สมบูรณ์แบบ',wk:'ชอบวิจารณ์ · ไม่ยอมรับความไม่สมบูรณ์'},
+  {icon:'🌊',name:'壬水 — น้ำหยาง',p:'ฉลาด ปรับตัวเก่ง มีเสน่ห์ เหมือนมหาสมุทรกว้างใหญ่ ชอบเรียนรู้ มีวิสัยทัศน์ไกล ชอบผจญภัย',c:'เหมาะกับธุรกิจ การสื่อสาร นักวิทยาศาสตร์ งานต่างประเทศ',f:'สัญชาตญาณธุรกิจดี โอกาสจากการค้าระหว่างประเทศ ระวังลงทุนเสี่ยง',str:'ฉลาด · วิสัยทัศน์กว้าง · เสน่ห์',wk:'ขาดโฟกัส · เปลี่ยนใจบ่อย'},
+  {icon:'💧',name:'癸水 — น้ำหยิน',p:'สัญชาตญาณดีเยี่ยม ลึกซึ้ง เห็นอกเห็นใจ เหมือนน้ำค้างที่มีพลังลึก มองเห็นสิ่งที่คนอื่นมองข้ามไป',c:'เหมาะกับงานจิตวิทยา ศาสตร์ลึกลับ ศิลปะ การวิจัย',f:'ได้โอกาสจากสัญชาตญาณ แต่ควรมีแผนชัดเจน',str:'สัญชาตญาณ · เห็นอกเห็นใจ · ลึกซึ้ง',wk:'อ่อนไหวเกิน · เก็บกด'},
+];
+
+function renderPersonality(dmIdx, ec){
+  const dm=DM_DATA[dmIdx], de=BD.STEM_E[dmIdx], total=ec.reduce((a,b)=>a+b,0)||1;
+  const pct=Math.round(ec[de]/total*100);
+  let lbl='สมดุล',lc='#6ee79a';
+  if(pct>=40){lbl='แข็งมาก';lc='#f87171';} else if(pct>=28){lbl='แข็ง';lc='#fb923c';}
+  else if(pct<10){lbl='อ่อนมาก';lc='#7dd3fc';} else if(pct<18){lbl='อ่อน';lc='#fbbf24';}
+  return `
+    <div class="flex items-start gap-4 mb-5">
+      <div class="text-5xl flex-shrink-0">${dm.icon}</div>
+      <div>
+        <div class="text-lg font-bold text-white mb-1">${dm.name}</div>
+        <div class="text-sm" style="color:var(--gold)">Day Master: <span style="color:${lc};font-weight:700">${lbl}</span> <span class="muted">(${BD.ELEM_TH[de]} ${pct}%)</span></div>
+      </div>
+    </div>
+    <p class="text-sm leading-relaxed mb-4" style="color:#c8b880">${dm.p}</p>
+    <div class="grid sm:grid-cols-2 gap-3 text-xs">
+      <div class="inset p-3 rounded-lg"><div class="font-semibold text-green-400 mb-2">✦ จุดแข็ง</div><div class="muted">${dm.str}</div></div>
+      <div class="inset p-3 rounded-lg"><div class="font-semibold text-red-400 mb-2">⚡ จุดพัฒนา</div><div class="muted">${dm.wk}</div></div>
+    </div>`;
+}
+
+function renderCareer(dmIdx, ec){
+  const dm=DM_DATA[dmIdx], mxE=ec.indexOf(Math.max(...ec)), mnE=ec.indexOf(Math.min(...ec));
+  const C=['🌿 ไม้: การเกษตร การศึกษา แพทย์','🔥 ไฟ: บันเทิง ไฟฟ้า อาหาร','⛰️ ดิน: อสังหาฯ ก่อสร้าง','⚙️ ทอง: การเงิน กฎหมาย วิศวกร','💧 น้ำ: การค้า ท่องเที่ยว ดิจิทัล'];
+  return `
+    <p class="text-sm leading-relaxed mb-4" style="color:#c8b880">${dm.c}</p>
+    <div class="inset p-4 rounded-lg">
+      <div class="gold font-semibold text-sm mb-3">อาชีพที่เหมาะสมตามธาตุ</div>
+      <div class="grid sm:grid-cols-2 gap-2 text-xs muted">
+        <div class="inset p-2 rounded">ธาตุเด่น: ${C[mxE]}</div>
+        <div class="inset p-2 rounded">ธาตุขาด: ${C[mnE]} (ควรเสริม)</div>
+      </div>
+    </div>
+    <p class="text-xs muted mt-3">คำแนะนำเฉพาะบุคคลเชิงลึก → <a href="#premium" class="gold hover:underline">Pro 299฿</a></p>`;
+}
+
+function renderFinance(dmIdx, ec){
+  const dm=DM_DATA[dmIdx], wE=(BD.STEM_E[dmIdx]+2)%5, wC=Math.round(ec[wE]);
+  let msg=wC===0?`<span style="color:#f87171">ไม่มีธาตุทรัพย์</span> — ต้องอาศัยความพยายามสูง`
+         :wC<=1?`<span style="color:#fbbf24">ธาตุทรัพย์เล็กน้อย</span> — โอกาสพอสมควร`
+               :`<span style="color:#6ee79a">ธาตุทรัพย์แข็งแกร่ง</span> — โอกาสทางการเงินดี`;
+  return `
+    <p class="text-sm leading-relaxed mb-4" style="color:#c8b880">${dm.f}</p>
+    <div class="inset p-4 rounded-lg mb-3">
+      <div class="gold font-semibold text-sm mb-2">ธาตุทรัพย์ (财星)</div>
+      <p class="text-xs muted mb-2">ธาตุทรัพย์ของคุณคือ <span class="gold font-bold">${BD.ELEM_ICO[wE]} ${BD.ELEM_CN[wE]} ${BD.ELEM_TH[wE]}</span></p>
+      <p class="text-sm">${msg}</p>
+    </div>
+    <p class="text-xs muted">วิเคราะห์ภาพรวมปี 2026 → <a href="#premium" class="gold hover:underline">Pro 299฿</a></p>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MAIN
+// ═══════════════════════════════════════════════════════════════
+let _lastData=null;
+
+async function calculateBazi(){
+  const name=document.getElementById('inp-name').value.trim()||'ผู้ใช้';
+  const gender=document.querySelector('input[name="gender"]:checked').value;
+  const dv=document.getElementById('inp-day').value, mv=document.getElementById('inp-month').value, yv=document.getElementById('inp-year').value;
+  if(!dv||!mv||!yv){alert('กรุณากรอกวัน เดือน ปีเกิด');return;}
+  const day=+dv, month=+mv, year=+yv;
+  if(new Date(year,month-1,day).getDate()!==day){alert('วันที่ไม่ถูกต้อง');return;}
+
+  const hv=document.getElementById('inp-hour').value, nv=document.getElementById('inp-minute').value;
+  const hasTime=hv!==''&&nv!=='';
+  const hour=hasTime?+hv:-1, minute=hasTime?+nv:-1;
+  const country=document.getElementById('inp-country').value;
+  const useTST=country==='TH';
+  const TZ={TH:420,CN:480,JP:540,KR:540,TW:480,SG:480,GB:0,US_EST:-300,US_PST:-480};
+  const tzOffset=TZ[country]??420;
+  let longitude=100.5;
+  if(country==='TH'){const pv=BD.THAI_PROV.find(p=>p[0]===document.getElementById('inp-province').value);if(pv)longitude=pv[1];}
+  let solarNote='';
+  if(hasTime&&useTST){const off=Math.round((longitude-tzOffset/4)*4);solarNote=`True Solar Time (${off>=0?'+':''}${off}นาที)`;}
+
+  const btn=document.getElementById('calc-btn');
+  btn.disabled=true;
+  document.getElementById('loading').classList.remove('hidden');
+  document.getElementById('results-area').classList.add('hidden');
+
+  try{
+    const result=await BaziEngine.calculateBazi({year,month,day,hour,minute,gender,timezoneOffsetMinutes:tzOffset,useTrueSolarTime:useTST,longitudeDegrees:longitude,eightCharProviderSect:2,annualPillarRange:{from:2020,to:2035}});
+    _lastData=convertResult(result,name,solarNote);
+    window._dmIdx=_lastData.dmIdx;
+    renderAll(_lastData);
+  }catch(e){
+    console.error(e);
+    alert('เกิดข้อผิดพลาด: '+e.message);
+  }finally{
+    btn.disabled=false;
+    document.getElementById('loading').classList.add('hidden');
+  }
+}
+
+function renderAll(d){
+  const{name,gender,year,month,day,hour,minute,hasTime,solarNote,YP,MP,DP,HP,dmIdx,ec,lpData,yearCycle,monthlyPillars}=d;
+  const CY=2026, CM=new Date().getMonth()+1;
+  const MON=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const gC=gender==='male'?'#7dd3fc':'#f9a8d4', gS=gender==='male'?'♂':'♀';
+  const activeLp=lpData.pillars.find(p=>p.startYear<=CY&&CY<=p.startYear+9);
+
+  document.getElementById('res-header').innerHTML=`
+    <div class="flex items-start gap-4">
+      <div class="text-5xl flex-shrink-0">${DM_DATA[dmIdx].icon}</div>
+      <div class="flex-1 min-w-0">
+        <div class="text-xl font-bold text-white">${name} <span style="color:${gC}">${gS}</span></div>
+        <div class="text-sm muted mt-0.5">${day} ${MON[month]} พ.ศ.${year+543}${hasTime?` · ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')} น.`:''}${solarNote?` <span class="gold">(${solarNote})</span>`:''}</div>
+        <div class="mt-2 font-black tracking-wider" style="font-size:1.2rem;color:var(--gold);text-shadow:0 0 12px var(--gold-glow)">${d.baziString}</div>
+        <div class="flex flex-wrap gap-1.5 mt-2 text-xs">
+          <span style="background:rgba(212,160,23,.12);color:var(--gold);border-radius:999px;padding:.2rem .7rem">日主 ${BD.STEMS[dmIdx]} ${BD.ELEM_TH[BD.STEM_E[dmIdx]]}${BD.STEM_YIN[dmIdx]?'หยิน':'หยาง'}</span>
+          <span style="background:rgba(212,160,23,.07);color:var(--muted);border-radius:999px;padding:.2rem .7rem">นักษัตร ${BD.BR_ANIMAL[YP.branchIdx]}</span>
+          <span style="background:rgba(212,160,23,.07);color:var(--muted);border-radius:999px;padding:.2rem .7rem">大运 อายุ ${activeLp?.age||'?'}–${activeLp?activeLp.age+9:'?'}</span>
+          ${d.fetalOrigin?`<span style="background:rgba(212,160,23,.05);color:var(--muted2);border-radius:999px;padding:.2rem .7rem">胎元 ${d.fetalOrigin} · 命宫 ${d.ownSign}</span>`:''}
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('res-chart').innerHTML        = renderChart(YP,MP,DP,HP,dmIdx);
+  document.getElementById('res-luck').innerHTML         = renderLuckPillars(lpData,year,CY);
+  document.getElementById('res-year').innerHTML         = renderYearCycle(yearCycle,dmIdx,CY,year);
+  document.getElementById('res-monthly').innerHTML      = renderMonthly(monthlyPillars,dmIdx,CM);
+  document.getElementById('res-elements').innerHTML     = renderRadar(ec);
+  document.getElementById('res-personality').innerHTML  = renderPersonality(dmIdx,ec);
+  document.getElementById('res-career').innerHTML       = renderCareer(dmIdx,ec);
+  document.getElementById('res-finance').innerHTML      = renderFinance(dmIdx,ec);
+
+  document.getElementById('results-area').classList.remove('hidden');
+  setTimeout(()=>{ document.querySelectorAll('#elem-bars .bar-fill').forEach(b=>{b.style.width=b.dataset.w+'%';}); },100);
+  setTimeout(()=>{ document.getElementById('results-area').scrollIntoView({behavior:'smooth',block:'start'}); },200);
+  showPanel('chart');
+}
+
+// PANELS
+const PANELS=['chart','luck','year','monthly','elements','personality','career','finance'];
+function showPanel(name){
+  PANELS.forEach(id=>{
+    const el=document.getElementById('panel-'+id); if(el)el.classList.toggle('show',id===name);
+    const btn=document.getElementById('sb-'+id); if(btn)btn.classList.toggle('active',id===name);
+  });
+  document.querySelectorAll('.mob-tab').forEach((t,i)=>t.classList.toggle('active',PANELS[i]===name));
+  const panel=document.getElementById('panel-'+name);
+  if(panel&&!document.getElementById('results-area').classList.contains('hidden'))
+    setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+
+// FORM INIT
+function initForm(){
+  const fill=(id,html)=>{document.getElementById(id).innerHTML=html;};
+  fill('inp-day','<option value="">วัน</option>'+Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join(''));
+  const MN=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  fill('inp-month','<option value="">เดือน</option>'+MN.map((m,i)=>`<option value="${i+1}">${i+1} ${m}</option>`).join(''));
+  fill('inp-year','<option value="">ปี ค.ศ.</option>'+Array.from({length:106},(_,i)=>`<option value="${2026-i}">${2026-i} (พ.ศ.${2026-i+543})</option>`).join(''));
+  fill('inp-hour','<option value="">ชั่วโมง</option>'+Array.from({length:24},(_,i)=>`<option value="${i}">${String(i).padStart(2,'0')} น.</option>`).join(''));
+  fill('inp-minute','<option value="">นาที</option>'+Array.from({length:60},(_,i)=>`<option value="${i}">${String(i).padStart(2,'0')}</option>`).join(''));
+  const pe=document.getElementById('inp-province');
+  pe.innerHTML=BD.THAI_PROV.map(p=>`<option value="${p[0]}">${p[0]}</option>`).join('');
+  pe.value='กรุงเทพมหานคร';
+}
+function handleCountryChange(){
+  document.getElementById('section-province').style.display=document.getElementById('inp-country').value==='TH'?'':'none';
+}
+initForm();
+</script>
+</body>
+</html>

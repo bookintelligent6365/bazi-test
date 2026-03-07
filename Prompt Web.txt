@@ -1,0 +1,76 @@
+1. ภาพรวมและดีไซน์ (Visual & UI/UX)
+ธีมสี: เน้น โทนสีทอง เรียบหรู (Gold Elegant) อ้างอิงจาก cantian.ai
+สไตล์: Modern & Clean UI โดยใช้ Tailwind CSS ในการจัดการ Layout
+โครงสร้างการจัดวาง: รองรับ Responsive Design (Mobile & Desktop) และจัดระเบียบไฟล์ไว้ในโฟลเดอร์ Project 1 Web ดูดวง Bazi
+
+2. โครงสร้างหน้าเว็บไซต์ (Page Structure)
+2.1 หน้าแรก (Landing Page)
+Content: อธิบายแนวคิด "บาจื่อคือหลักธรรมชาติ + เทคโนโลยี AI" เพื่อให้ดูทันสมัยและน่าเชื่อถือ
+Call to Action (CTA): ปุ่ม "วิเคราะห์ดวง" ที่โดดเด่นเพื่อดึงคนเข้าสู่ระบบคำนวณ
+ดูตัวอย่าง "C:\Users\pong_\Desktop\Project\Project 1 Web ดูดวง Bazi\ตัวอย่าง\1- Overview.png
+
+2.2 หน้ากรอกข้อมูลและแสดงผล (Main Application)
+-เมื่อวิเคราะห์ดวงเข้ามา
+
+-แบ่งพื้นที่หน้าจอเป็น 2 ส่วนหลัก: พื้นที่ด้านซ้าย (Sidebar Navigation) และพื้นที่หลัก ด้านขวา
+
+ด้านซ้าย Sidebar Navigation
+-ปุ่มตั้งดวงจีน
+-พื้นดวงจีน
+-วิเคราะห์ขั้นสูง
+
+-ปุ่มตั้งดวงจีน
+เมื่อเข้ามาตอนแรกต้องตั้งดวงจีนก่อน
+Input Form: รับข้อมูล ชื่อ, วัน (dropdown 01,01,02,...,31)  เดือน (dropdown Jan,Feb,Mar,...,Dec) ปีเกิด (dropdown 1900/2443, 1901/2444, ... 1901/2444, 2107/2650 ) , เวลาเกิด ชั่วโมง (dropdown 00,01,02,...,23) : นาที (dropdown 00,01,02,...,60)  , เพศ เป็น Dropdown (ชาย/หญิง) ,  ประเทศ และ จังหวัดที่เกิด 
+ปุ่มกดวิเคราะห์ดวง
+เมื่อกดเสร็จจะคำนวนแล้วโชว์พื้นดวงทั้งหมด
+
+-พื้นดวงจีน
+ขอรูป emoji สี ตามแต่ละเสาด้วย เช่น น้ำหยางเป็นemoji น้ำทะเล สีฟ้า ,  น้ำหยินเป็นemoji หยด สีฟ้า, นักกษัตรก็เป็นรูปemoji น่ารักๆ เช่น ลิงน้อย
+
+ตัวอย่างในรูป
+C:\Users\pong_\Desktop\Project\Project 1 Web ดูดวง Bazi\ตัวอย่าง\3-หน้าโชว์ข้อมูลพื้นฐาน-1
+
+1. Main Chart Structure (Four Pillars & Hidden Stems)
+Header: ใช้ข้อมูลจาก eightChars.year/month/day/hour.
+Grid: จัดวางแบบ 4 คอลัมน์ (Year, Month, Day, Hour) โดยมี Row หลักดังนี้:
+Heavenly Stems: แสดงตัวอักษรจีน + คำแปลภาษาอังกฤษ (เช่น Talent, Executive) พร้อมลงสีตามธาตุ (Wood=Green, Fire=Red, Earth=Brown, Metal=Gold, Water=Blue).
+Earthly Branches: ตัวอักษรจีนหลักตัวใหญ่.
+Hidden Stems (藏干): สร้างรายการแบบ Nested List ภายใต้แต่ละ Branch โดยใช้ข้อมูลจาก tenGod.name และ category เพื่อแสดงผลสิบเทพแฝง.
+2. Dynamic Pillars (Luck, Year, Month, Day)
+Luck Pillars (大运): สร้าง Horizontal Scrollable Card โดยดึงข้อมูลจาก luckPillars.pillars[]. แสดง startAge, endYear และ stemTenGod. ไฮไลท์ Pillar ปัจจุบันที่ผู้ใช้กำลังอยู่ในช่วงอายุนั้น.
+Timeline View:
+Annual Pillars (流年): แสดงตารางหรือ Card ของปีปัจจุบันและปีถัดไป โดยระบุธาตุและสิบเทพประจำปีจาก annualPillars[].
+Monthly & Daily: แสดงผลแบบตารางรายเดือน (monthlyPillars[]) และส่วนแสดงผลรายวัน (getDailyPillars) สำหรับการดูดวงแบบ Real-time.
+3. Data Visualization (Analytics)
+Element Strength: * Radar Chart: ใช้ elementStrength.percentages ในการพลอตสมดุล 5 ธาตุ (Wood, Fire, Earth, Metal, Water) เพื่อให้เห็นภาพรวมของดวงชะตา.
+Bar Chart: แสดงน้ำหนักของแต่ละธาตุเทียบกันเพื่อระบุธาตุที่แข็งแรงที่สุด (Strongest) และธาตุที่ขาด (Missing).
+Ten Gods Category: จัดกลุ่มสิบเทพตาม category (เช่น Output, Wealth, Influence, Resource, Companion) เพื่อวิเคราะห์ศักยภาพรายบุคคล.
+4. UI/UX & Interaction
+Bilingual Support: แสดงผลควบคู่ทั้งภาษาไทยและอังกฤษ (เช่น "正官 - Executive").
+Visual Feedback: เมื่อ Hover ที่สิบเทพตัวใดตัวหนึ่ง ให้แสดง Tooltip อธิบายความหมายเบื้องต้น.
+Responsive Design: บนมือถือให้เปลี่ยนจาก 4 คอลัมน์เป็น 2x2 หรือ Vertical Stack เพื่อให้อ่านง่าย.
+
+มีปุ่มวิเคราะห์ขั้นสูง
+
+
+-ปุ่มวิเคราะห์ขั้นสูง
+3. ส่วนบริการพรีเมียม (Premium Offer - Pro)
+'ยกระดับการพยากรณ์ให้ลึกซึ้งกว่าเดิม'
+
+ราคา: 299 บาท (โปรโมชั่นถึงสิ้นเดือนนี้ จาก 499 บาท)
+
+สิ่งที่ลูกค้าจะได้รับ:
+-เนื้อหาเจาะลึกภาพดวงตลอดชีวิต
+-เนื้อหาเจาะลึกภาพรวมปี 2026 
+-การงาน การเงิน ความรัก สุขภาพ
+-สรุปผลเป็นไฟล์ PDF, ไฟส์เสียงวิเคราะห์ดวงอย่างละเอียด
+-จัดส่งภายใน 2 วันทำการผ่านอีเมล
+
+Conversion: ปุ่ม 'วิเคราะห์เลย Line' https://line.me/ti/p/l25exED9bl
+
+4. รายละเอียดด้านเทคนิค (Technical Specifications)
+Technology Stack: HTML, CSS (Tailwind), และ Vanilla JavaScript
+Architecture: ใช้ Modular Code (แยก Logic การคำนวณดวงออกจากส่วนแสดงผล UI) เพื่อให้ง่ายต่อการอัปเกรด AI ในอนาคต
+Documentation: เขียน Comment อธิบาย Code ในส่วนการคำนวณ Four Pillars (สี่แถว) อย่างละเอียด เพื่อให้กู๋เอาไปต่อยอดหรือแก้ไขได้เอง
+

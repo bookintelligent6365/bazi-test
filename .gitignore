@@ -1,0 +1,10 @@
+node_modules/
+src/
+tsconfig.json
+package.json
+package-lock.json
+*.ts
+_tmp*
+CLAUDE.md
+Prompt Web.txt
+ตัวอย่าง/
