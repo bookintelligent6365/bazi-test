@@ -150,6 +150,22 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
 .mc-tg{font-size:.55rem;margin-top:2px;font-weight:600;}
 
 /* ══════════════════════════════════════
+   DAILY CYCLE 流日
+   ══════════════════════════════════════ */
+.dc-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+.dc-nav-btn{padding:.3rem .75rem;border-radius:.4rem;font-size:.75rem;background:var(--s2);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s;}
+.dc-nav-btn:hover{border-color:var(--gold);color:var(--gold);}
+.dc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.2rem;}
+.dc-dow{text-align:center;font-size:.54rem;font-weight:700;color:var(--muted2);padding:.2rem 0;}
+.dc-day{border-radius:.35rem;padding:.25rem .15rem;text-align:center;border:1px solid var(--border2);min-height:62px;transition:border-color .15s;}
+.dc-day:hover{border-color:var(--border);}
+.dc-today{border-color:var(--gold)!important;background:rgba(212,160,23,.07);}
+.dc-empty{border-color:transparent!important;background:transparent;}
+.dc-dn{font-size:.62rem;color:var(--muted);font-weight:600;}
+.dc-sc{font-size:.88rem;font-weight:900;line-height:1.15;}
+.dc-tg{font-size:.47rem;font-weight:700;margin-top:1px;}
+
+/* ══════════════════════════════════════
    ELEMENT BAR
    ══════════════════════════════════════ */
 .bar-track{background:rgba(255,255,255,.06);border-radius:999px;height:7px;overflow:hidden;}
@@ -286,6 +302,7 @@ body.bnav-open{padding-bottom:72px;}
     <button class="mob-tab" onclick="showPanel('luck')">大运 วัยจร</button>
     <button class="mob-tab" onclick="showPanel('year')">流年 รายปี</button>
     <button class="mob-tab" onclick="showPanel('monthly')">流月 รายเดือน</button>
+    <button class="mob-tab" onclick="showPanel('daily')">流日 รายวัน</button>
     <button class="mob-tab" onclick="showPanel('elements')">五行 ธาตุ</button>
     <button class="mob-tab" onclick="showPanel('personality')">นิสัย</button>
     <button class="mob-tab" onclick="showPanel('career')">การงาน</button>
@@ -301,6 +318,7 @@ body.bnav-open{padding-bottom:72px;}
       <button class="sb-btn"        onclick="showPanel('luck')"        id="sb-luck">       <span class="sb-ico">🔄</span> วัยจร 大运</button>
       <button class="sb-btn"        onclick="showPanel('year')"        id="sb-year">       <span class="sb-ico">📅</span> รายปี 流年</button>
       <button class="sb-btn"        onclick="showPanel('monthly')"     id="sb-monthly">    <span class="sb-ico">🗓</span> รายเดือน 流月</button>
+      <button class="sb-btn"        onclick="showPanel('daily')"       id="sb-daily">      <span class="sb-ico">📆</span> รายวัน 流日</button>
       <button class="sb-btn"        onclick="showPanel('elements')"    id="sb-elements">   <span class="sb-ico">☯</span> Radar 五行</button>
       <div class="sb-div"></div>
       <div class="sb-label">วิเคราะห์ฟรี</div>
@@ -434,7 +452,23 @@ body.bnav-open{padding-bottom:72px;}
           <div id="res-monthly"></div>
         </div>
 
-        <!-- ⑤ 五行 Radar -->
+        <!-- ⑤ รายวัน -->
+        <div id="panel-daily" class="result-panel card p-5 anim" style="animation-delay:.21s">
+          <div class="flex items-center justify-between mb-1">
+            <h2 class="text-base font-bold gold">⑤ 流日 — รายวัน</h2>
+            <span class="text-xs muted">Ten God เทียบ Day Master</span>
+          </div>
+          <p class="text-xs muted mb-4">สีตัวอักษร = ธาตุ · กรอบทอง = วันนี้</p>
+          <div class="dc-nav">
+            <button class="dc-nav-btn" onclick="dcNav(-1)">◀ เดือนก่อน</button>
+            <span id="dc-title" class="text-sm font-bold gold"></span>
+            <button class="dc-nav-btn" onclick="dcNav(1)">เดือนถัดไป ▶</button>
+          </div>
+          <div id="dc-grid" class="dc-grid"></div>
+          <p class="text-xs muted mt-3">จ=จันทร์ · อ=อังคาร · พ=พุธ · พฤ=พฤหัส · ศ=ศุกร์ · ส=เสาร์ · อา=อาทิตย์</p>
+        </div>
+
+        <!-- ⑥ 五行 Radar -->
         <div id="panel-elements" class="result-panel card p-5 anim" style="animation-delay:.2s">
           <h2 class="text-base font-bold gold mb-4">⑤ 五行 — สมดุลธาตุทั้งห้า</h2>
           <div id="res-elements"></div>
@@ -672,6 +706,7 @@ body.bnav-open{padding-bottom:72px;}
     <button class="bnav-btn"        onclick="showPanel('luck')"        id="bn-luck">       <span class="bnav-ico">🔄</span><span class="bnav-lbl">วัยจร</span><div class="bnav-bar"></div></button>
     <button class="bnav-btn"        onclick="showPanel('year')"        id="bn-year">       <span class="bnav-ico">📅</span><span class="bnav-lbl">รายปี</span><div class="bnav-bar"></div></button>
     <button class="bnav-btn"        onclick="showPanel('monthly')"     id="bn-monthly">    <span class="bnav-ico">🗓</span><span class="bnav-lbl">รายเดือน</span><div class="bnav-bar"></div></button>
+    <button class="bnav-btn"        onclick="showPanel('daily')"       id="bn-daily">      <span class="bnav-ico">📆</span><span class="bnav-lbl">รายวัน</span><div class="bnav-bar"></div></button>
     <button class="bnav-btn"        onclick="showPanel('elements')"    id="bn-elements">   <span class="bnav-ico">☯</span><span class="bnav-lbl">ธาตุ</span><div class="bnav-bar"></div></button>
     <button class="bnav-btn"        onclick="showPanel('personality')" id="bn-personality"><span class="bnav-ico">🌟</span><span class="bnav-lbl">นิสัย</span><div class="bnav-bar"></div></button>
     <button class="bnav-btn"        onclick="showPanel('career')"      id="bn-career">     <span class="bnav-ico">💼</span><span class="bnav-lbl">การงาน</span><div class="bnav-bar"></div></button>
@@ -854,32 +889,34 @@ function renderLuckPillars(lpData, birthYear, CY){
 }
 
 function renderYearCycle(years, dmIdx, CY, birthYear){
-  return `<div class="yc-grid">${years.map(y=>{
+  const cards=years.map(y=>{
     const sE=BD.STEM_E[y.stemIdx],bE=BD.BR_E[y.branchIdx];
     const g=getTG(dmIdx,y.stemIdx),c=BD.CAT_CLR[g.cat]||'#d4a017';
     const isCurr=y.year===CY,age=y.year-birthYear;
-    return `<div class="yc-card${isCurr?' yc-now':''}">
-      <div class="yc-y">${y.year}<span style="opacity:.45"> (${age})</span></div>
-      <div class="yc-pair"><span style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[y.stemIdx]}</span><span style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[y.branchIdx]}</span></div>
-      <div class="yc-tg" style="color:${c}">${g.cn}</div>
-      <div style="font-size:.52rem;color:var(--muted2)">${BD.ELEM_TH[sE]}·${BD.BR_ANIMAL[y.branchIdx]}</div>
+    return `<div class="lp-card${isCurr?' lp-active':''}">
+      <div class="lp-age">${y.year}<br><span style="font-size:.53rem;color:var(--gold)">อายุ ${age}</span></div>
+      <div class="lp-tg" style="color:${c};background:${c}14">${g.cn}</div>
+      <div class="lp-stem ${BD.ELEM_CLS[sE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[y.stemIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[sE]}">${BD.ELEM_CN[sE]}</div></div>
+      <div class="lp-branch ${BD.ELEM_CLS[bE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[y.branchIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[bE]}">${BD.BR_ANIMAL[y.branchIdx]}</div></div>
     </div>`;
-  }).join('')}</div><p class="text-xs muted mt-3">สี = ธาตุ · Ten God เทียบ Day Master · วงเล็บ = อายุ · ★ ปัจจุบัน</p>`;
+  }).join('');
+  return `<div class="lp-row">${cards}</div><p class="text-xs muted mt-3">กรอบทอง = ปัจจุบัน · สี = ธาตุ · Ten God เทียบ Day Master · วงเล็บ = อายุ</p>`;
 }
 
 function renderMonthly(months, dmIdx, CM){
   const M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  return `<div class="mc-grid">${months.map(m=>{
+  const cards=months.map(m=>{
     const sE=BD.STEM_E[m.stemIdx],bE=BD.BR_E[m.branchIdx];
     const g=getTG(dmIdx,m.stemIdx),c=BD.CAT_CLR[g.cat]||'#d4a017';
     const isCurr=m.month===CM;
-    return `<div class="mc-card${isCurr?' mc-now':''}">
-      <div class="mc-m">${M[m.month-1]}${isCurr?' ◀':''}</div>
-      <div class="mc-pair"><span style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[m.stemIdx]}</span><span style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[m.branchIdx]}</span></div>
-      <div class="mc-tg" style="color:${c}">${g.cn}</div>
-      <div style="font-size:.52rem;color:var(--muted2)">${BD.ELEM_TH[sE]}</div>
+    return `<div class="lp-card${isCurr?' lp-active':''}">
+      <div class="lp-age">${M[m.month-1]}${isCurr?' ◀':''}</div>
+      <div class="lp-tg" style="color:${c};background:${c}14">${g.cn}</div>
+      <div class="lp-stem ${BD.ELEM_CLS[sE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[m.stemIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[sE]}">${BD.ELEM_CN[sE]}</div></div>
+      <div class="lp-branch ${BD.ELEM_CLS[bE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[m.branchIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[bE]}">${BD.ELEM_TH[bE]}</div></div>
     </div>`;
-  }).join('')}</div><p class="text-xs muted mt-3">สี = ธาตุ · Ten God เทียบ Day Master · ◀ = เดือนปัจจุบัน</p>`;
+  }).join('');
+  return `<div class="lp-row">${cards}</div><p class="text-xs muted mt-3">กรอบทอง = เดือนปัจจุบัน · สี = ธาตุ · Ten God เทียบ Day Master</p>`;
 }
 
 function renderRadar(ec){
@@ -1060,6 +1097,7 @@ function renderAll(d){
   document.getElementById('res-luck').innerHTML         = renderLuckPillars(lpData,year,CY);
   document.getElementById('res-year').innerHTML         = renderYearCycle(yearCycle,dmIdx,CY,year);
   document.getElementById('res-monthly').innerHTML      = renderMonthly(monthlyPillars,dmIdx,CM);
+  _dailyYear=CY; _dailyMonth=CM; renderDailyGrid();
   document.getElementById('res-elements').innerHTML     = renderRadar(ec);
   document.getElementById('res-personality').innerHTML  = renderPersonality(dmIdx,ec);
   document.getElementById('res-career').innerHTML       = renderCareer(dmIdx,ec);
@@ -1074,7 +1112,7 @@ function renderAll(d){
 }
 
 // PANELS
-const PANELS=['chart','luck','year','monthly','elements','personality','career','finance'];
+const PANELS=['chart','luck','year','monthly','daily','elements','personality','career','finance'];
 function showPanel(name){
   PANELS.forEach(id=>{
     const btn=document.getElementById('sb-'+id); if(btn)btn.classList.toggle('active',id===name);
@@ -1084,6 +1122,55 @@ function showPanel(name){
   const panel=document.getElementById('panel-'+name);
   if(panel&&!document.getElementById('results-area').classList.contains('hidden'))
     setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DAILY CYCLE 流日
+// ═══════════════════════════════════════════════════════════════
+let _dailyYear=2026,_dailyMonth=new Date().getMonth()+1;
+
+function renderDailyGrid(){
+  if(!_lastData) return;
+  const dmChar=BD.STEMS[_lastData.dmIdx];
+  const dmIdx=_lastData.dmIdx;
+  const y=_dailyYear,m=_dailyMonth;
+  const today=new Date(),CY=today.getFullYear(),CM=today.getMonth()+1,CD=today.getDate();
+  const MONTH_TH=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  document.getElementById('dc-title').textContent=`${MONTH_TH[m]} ${y} (พ.ศ.${y+543})`;
+  const firstDay=new Date(y,m-1,1),lastDay=new Date(y,m,0);
+  const dailies=BaziEngine.getDailyPillars(firstDay,lastDay,dmChar);
+  const dailyMap={};
+  dailies.forEach(d=>{dailyMap[+d.date.split('-')[2]]=d;});
+  let startDow=(firstDay.getDay()+6)%7;
+  const DOW=['จ','อ','พ','พฤ','ศ','ส','อา'];
+  let html=DOW.map(d=>`<div class="dc-dow">${d}</div>`).join('');
+  for(let i=0;i<startDow;i++) html+=`<div class="dc-day dc-empty"></div>`;
+  for(let d=1;d<=lastDay.getDate();d++){
+    const dp=dailyMap[d];
+    const isToday=y===CY&&m===CM&&d===CD;
+    if(dp){
+      const sIdx=BD.STEMS.indexOf(dp.stemChar);
+      const bIdx=BD.BRANCHES.indexOf(dp.branchChar);
+      const sE=BD.STEM_E[sIdx],bE=BD.BR_E[bIdx];
+      const g=getTG(dmIdx,sIdx),c=BD.CAT_CLR[g.cat]||'#d4a017';
+      html+=`<div class="dc-day${isToday?' dc-today':''}">
+        <div class="dc-dn" style="${isToday?'color:var(--gold)':''}">${d}</div>
+        <div class="dc-sc" style="color:${BD.ELEM_CLR[sE]}">${dp.stemChar}</div>
+        <div class="dc-sc" style="color:${BD.ELEM_CLR[bE]};font-size:.72rem">${dp.branchChar}</div>
+        <div class="dc-tg" style="color:${c}">${g.cn}</div>
+      </div>`;
+    } else {
+      html+=`<div class="dc-day${isToday?' dc-today':''}"><div class="dc-dn">${d}</div></div>`;
+    }
+  }
+  document.getElementById('dc-grid').innerHTML=html;
+}
+
+function dcNav(delta){
+  _dailyMonth+=delta;
+  if(_dailyMonth>12){_dailyMonth=1;_dailyYear++;}
+  if(_dailyMonth<1){_dailyMonth=12;_dailyYear--;}
+  renderDailyGrid();
 }
 
 // FORM INIT
