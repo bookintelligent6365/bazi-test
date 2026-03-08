@@ -117,14 +117,16 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min
    LUCK PILLARS 大运
    ══════════════════════════════════════ */
 .lp-row{display:flex;gap:.45rem;overflow-x:auto;padding-bottom:.5rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-.lp-card{flex-shrink:0;width:84px;border-radius:.625rem;overflow:hidden;border:1px solid var(--border2);transition:border-color .2s,box-shadow .2s;}
+.lp-card{flex-shrink:0;width:88px;border-radius:.625rem;overflow:hidden;border:1px solid var(--border2);transition:border-color .2s,box-shadow .2s;}
 .lp-card:hover{border-color:var(--border);}
 .lp-active{border-color:var(--gold)!important;box-shadow:0 0 14px var(--gold-glow);}
 .lp-age{font-size:.58rem;text-align:center;padding:3px 2px;background:var(--s3);color:var(--muted);}
 .lp-tg{font-size:.6rem;text-align:center;padding:2px 4px;font-weight:700;}
-.lp-stem,.lp-branch{display:flex;flex-direction:column;align-items:center;padding:5px 3px;}
+.lp-stem,.lp-branch{display:flex;flex-direction:column;align-items:center;padding:5px 3px 3px;}
 .lp-c{font-size:1.45rem;font-weight:900;line-height:1;}
 .lp-s{font-size:.5rem;margin-top:2px;opacity:.75;}
+.lp-div{height:1px;background:rgba(255,255,255,.06);margin:0 6px;}
+.lp-ls{font-size:.54rem;font-weight:700;text-align:center;padding:3px 2px 4px;background:var(--s3);}
 
 /* ══════════════════════════════════════
    YEAR CYCLE 流年
@@ -315,11 +317,11 @@ body.bnav-open{padding-bottom:72px;}
     <aside class="sidebar card p-2 space-y-0.5">
       <div class="sb-label">ทางลัด</div>
       <button class="sb-btn active" onclick="showPanel('chart')"       id="sb-chart">      <span class="sb-ico">📊</span> พื้นดวงสี่เสา</button>
-      <button class="sb-btn"        onclick="showPanel('luck')"        id="sb-luck">       <span class="sb-ico">🔄</span> วัยจร 大运</button>
-      <button class="sb-btn"        onclick="showPanel('year')"        id="sb-year">       <span class="sb-ico">📅</span> รายปี 流年</button>
-      <button class="sb-btn"        onclick="showPanel('monthly')"     id="sb-monthly">    <span class="sb-ico">🗓</span> รายเดือน 流月</button>
-      <button class="sb-btn"        onclick="showPanel('daily')"       id="sb-daily">      <span class="sb-ico">📆</span> รายวัน 流日</button>
-      <button class="sb-btn"        onclick="showPanel('elements')"    id="sb-elements">   <span class="sb-ico">☯</span> Radar 五行</button>
+      <button class="sb-btn"        onclick="showPanel('luck')"        id="sb-luck">       <span class="sb-ico">🔄</span> วัยจร</button>
+      <button class="sb-btn"        onclick="showPanel('year')"        id="sb-year">       <span class="sb-ico">📅</span> รายปี</button>
+      <button class="sb-btn"        onclick="showPanel('monthly')"     id="sb-monthly">    <span class="sb-ico">🚩</span> รายเดือน</button>
+      <button class="sb-btn"        onclick="showPanel('daily')"       id="sb-daily">      <span class="sb-ico">🗓</span> รายวัน</button>
+      <button class="sb-btn"        onclick="showPanel('elements')"    id="sb-elements">   <span class="sb-ico">☯</span> Radar</button>
       <div class="sb-div"></div>
       <div class="sb-label">วิเคราะห์ฟรี</div>
       <button class="sb-btn"        onclick="showPanel('personality')" id="sb-personality"><span class="sb-ico">🌟</span> นิสัยและตัวตน</button>
@@ -327,7 +329,6 @@ body.bnav-open{padding-bottom:72px;}
       <button class="sb-btn"        onclick="showPanel('finance')"     id="sb-finance">    <span class="sb-ico">💰</span> การเงินและทรัพย์</button>
       <div class="sb-div"></div>
       <a href="#premium" class="sb-pro">✦ Pro — วิเคราะห์เชิงลึก 299฿</a>
-      <p class="text-center text-xs pb-2" style="color:var(--muted2)">PDF · เสียง · Life Path</p>
     </aside>
 
     <!-- MAIN -->
@@ -695,8 +696,8 @@ body.bnav-open{padding-bottom:72px;}
 
 <footer class="py-8 px-4 text-center text-sm muted" style="border-top:1px solid var(--border)">
   <div class="text-2xl font-black gold mb-2">八字 BaZi</div>
-  <p>ข้อมูลทั้งหมดประมวลผลบนเครื่องของคุณ ไม่มีการส่งข้อมูลออก</p>
-  <p class="text-xs mt-1 opacity-50">* เพื่อความบันเทิงและข้อมูลเบื้องต้นเท่านั้น</p>
+  <p>ดูแผนที่ชีวิตเพื่อความสำเร็จ</p>
+  <p class="text-xs mt-1 opacity-50">เพราะคุณสามารถประสบความสำเร็จได้ด้วยแบบแผนของคุณเอง</p>
 </footer>
 
 <!-- BOTTOM NAV (mobile) -->
@@ -705,8 +706,8 @@ body.bnav-open{padding-bottom:72px;}
     <button class="bnav-btn active" onclick="showPanel('chart')"       id="bn-chart">      <span class="bnav-ico">📊</span><span class="bnav-lbl">สี่เสา</span><div class="bnav-bar"></div></button>
     <button class="bnav-btn"        onclick="showPanel('luck')"        id="bn-luck">       <span class="bnav-ico">🔄</span><span class="bnav-lbl">วัยจร</span><div class="bnav-bar"></div></button>
     <button class="bnav-btn"        onclick="showPanel('year')"        id="bn-year">       <span class="bnav-ico">📅</span><span class="bnav-lbl">รายปี</span><div class="bnav-bar"></div></button>
-    <button class="bnav-btn"        onclick="showPanel('monthly')"     id="bn-monthly">    <span class="bnav-ico">🗓</span><span class="bnav-lbl">รายเดือน</span><div class="bnav-bar"></div></button>
-    <button class="bnav-btn"        onclick="showPanel('daily')"       id="bn-daily">      <span class="bnav-ico">📆</span><span class="bnav-lbl">รายวัน</span><div class="bnav-bar"></div></button>
+    <button class="bnav-btn"        onclick="showPanel('monthly')"     id="bn-monthly">    <span class="bnav-ico">🚩</span><span class="bnav-lbl">รายเดือน</span><div class="bnav-bar"></div></button>
+    <button class="bnav-btn"        onclick="showPanel('daily')"       id="bn-daily">      <span class="bnav-ico">🗓</span><span class="bnav-lbl">รายวัน</span><div class="bnav-bar"></div></button>
     <button class="bnav-btn"        onclick="showPanel('elements')"    id="bn-elements">   <span class="bnav-ico">☯</span><span class="bnav-lbl">ธาตุ</span><div class="bnav-bar"></div></button>
     <button class="bnav-btn"        onclick="showPanel('personality')" id="bn-personality"><span class="bnav-ico">🌟</span><span class="bnav-lbl">นิสัย</span><div class="bnav-bar"></div></button>
     <button class="bnav-btn"        onclick="showPanel('career')"      id="bn-career">     <span class="bnav-ico">💼</span><span class="bnav-lbl">การงาน</span><div class="bnav-bar"></div></button>
@@ -844,14 +845,13 @@ function renderPillar(p, dmIdx, isDM, label, sub) {
       ${tgHtml}
       <div class="bz-cell ${sCls}${glow}">
         <div class="bz-char">${BD.STEMS[p.stemIdx]}</div>
-        <div class="bz-elem">${BD.ELEM_CN[sE]} ${BD.ELEM_TH[sE]}</div>
-        <div class="bz-polar">${BD.STEM_YIN[p.stemIdx]?'陰 หยิน':'陽 หยาง'}</div>
+        <div class="bz-elem">${BD.ELEM_CN[sE]} ${BD.ELEM_TH[sE]} <span style="opacity:.7">${BD.STEM_YIN[p.stemIdx]?'หยิน':'หยาง'}</span></div>
       </div>
       <div class="ls ls-${lsT}">${lsN}</div>
       <div class="bz-cell ${bCls}${glow}">
         <div class="bz-char">${BD.BRANCHES[p.branchIdx]}</div>
-        <div class="bz-elem">${BD.ELEM_CN[bE]} ${BD.ELEM_TH[bE]}</div>
-        <div class="bz-polar">${BD.BR_YIN[p.branchIdx]?'陰':'陽'} ${BD.BR_ANIMAL[p.branchIdx]}</div>
+        <div class="bz-elem">${BD.ELEM_CN[bE]} ${BD.ELEM_TH[bE]} <span style="opacity:.7">${BD.BR_YIN[p.branchIdx]?'หยิน':'หยาง'}</span></div>
+        <div class="bz-polar">${BD.BR_ANIMAL[p.branchIdx]}</div>
       </div>
       <div class="hs-row">${hsHtml}</div>
       <div class="nayin">纳音 ${getNayin(p.stemIdx,p.branchIdx)}</div>
@@ -870,53 +870,105 @@ function renderChart(YP,MP,DP,HP,dmIdx){
     </div>`;
 }
 
-function renderLuckPillars(lpData, birthYear, CY){
+function renderLuckPillars(lpData, birthYear, CY, dmIdx){
+  const dm=dmIdx||window._dmIdx||0;
   const {startAge,startDate,isForward,pillars}=lpData;
   document.getElementById('lp-info').textContent=`เริ่มอายุ ${startAge} ปี · ${isForward?'วิ่งไปข้างหน้า (顺)':'วิ่งถอยหลัง (逆)'} · วันที่เริ่ม ${startDate||''}`;
   const cards=pillars.map(lp=>{
     const endYr=lp.startYear+9, active=lp.startYear<=CY&&CY<=endYr;
     const sE=BD.STEM_E[lp.stemIdx],bE=BD.BR_E[lp.branchIdx];
-    const g=getTG(window._dmIdx||0,lp.stemIdx), c=BD.CAT_CLR[g.cat]||'#d4a017';
+    // Stem Ten God
+    const sg=getTG(dm,lp.stemIdx), sc=BD.CAT_CLR[sg.cat]||'#d4a017';
+    // Branch Ten God (จาก 藏干หลัก)
+    const hiddenMain=BD.HIDDEN[lp.branchIdx][0];
+    const bg=getTG(dm,hiddenMain), bct=BD.CAT_CLR[bg.cat]||'#d4a017';
+    // Life Stage (十二長生)
+    const lsI=getLS(dm,lp.branchIdx), lsN=BD.LS[lsI], lsT=BD.LS_STR[lsN]||'m';
+    const lsClr=lsT==='s'?'#6ee79a':lsT==='m'?'#fbbf24':'#f87171';
     return `
       <div class="lp-card${active?' lp-active':''}">
         <div class="lp-age">อายุ ${lp.age}–${lp.age+9}<br><span style="font-size:.53rem;color:var(--gold)">${lp.startYear}–${endYr}</span></div>
-        <div class="lp-tg" style="color:${c};background:${c}14">${g.cn}</div>
-        <div class="lp-stem ${BD.ELEM_CLS[sE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[lp.stemIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[sE]};opacity:.75">${BD.ELEM_CN[sE]}</div></div>
-        <div class="lp-branch ${BD.ELEM_CLS[bE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[lp.branchIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[bE]};opacity:.75">${BD.BR_ANIMAL[lp.branchIdx]}</div></div>
+        <div class="lp-stem ${BD.ELEM_CLS[sE]}">
+          <div class="lp-c" style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[lp.stemIdx]}</div>
+          <div class="lp-s" style="color:${BD.ELEM_CLR[sE]}">${BD.ELEM_CN[sE]} ${BD.STEM_YIN[lp.stemIdx]?'หยิน':'หยาง'}</div>
+        </div>
+        <div class="lp-tg" style="color:${sc};background:${sc}14">${sg.cn}</div>
+        <div class="lp-div"></div>
+        <div class="lp-branch ${BD.ELEM_CLS[bE]}">
+          <div class="lp-c" style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[lp.branchIdx]}</div>
+          <div class="lp-s" style="color:${BD.ELEM_CLR[bE]}">${BD.ELEM_CN[bE]} ${BD.BR_YIN[lp.branchIdx]?'หยิน':'หยาง'}</div>
+        </div>
+        <div class="lp-tg" style="color:${bct};background:${bct}14">${bg.cn}</div>
+        <div class="lp-tg" style="color:var(--muted);background:transparent;font-size:.52rem">${BD.BR_ANIMAL[lp.branchIdx]}</div>
+        <div class="lp-ls" style="color:${lsClr}">${lsN}</div>
       </div>`;
   }).join('');
-  return `<div class="lp-row">${cards}</div><p class="text-xs muted mt-3">★ กรอบทอง = วัยจรปัจจุบัน · สีบน stem = Ten God</p>`;
+  return `<div class="lp-row">${cards}</div><p class="text-xs muted mt-3">★ กรอบทอง = วัยจรปัจจุบัน · TenGod บน = 天干 · ล่าง = 藏干หลัก · สี = แข็ง/กลาง/อ่อน</p>`;
 }
 
 function renderYearCycle(years, dmIdx, CY, birthYear){
   const cards=years.map(y=>{
     const sE=BD.STEM_E[y.stemIdx],bE=BD.BR_E[y.branchIdx];
-    const g=getTG(dmIdx,y.stemIdx),c=BD.CAT_CLR[g.cat]||'#d4a017';
     const isCurr=y.year===CY,age=y.year-birthYear;
+    // Stem Ten God
+    const sg=getTG(dmIdx,y.stemIdx),sc=BD.CAT_CLR[sg.cat]||'#d4a017';
+    // Branch Ten God (藏干หลัก)
+    const hiddenMain=BD.HIDDEN[y.branchIdx][0];
+    const bg=getTG(dmIdx,hiddenMain),bct=BD.CAT_CLR[bg.cat]||'#d4a017';
+    // Life Stage
+    const lsI=getLS(dmIdx,y.branchIdx),lsN=BD.LS[lsI],lsT=BD.LS_STR[lsN]||'m';
+    const lsClr=lsT==='s'?'#6ee79a':lsT==='m'?'#fbbf24':'#f87171';
     return `<div class="lp-card${isCurr?' lp-active':''}">
       <div class="lp-age">${y.year}<br><span style="font-size:.53rem;color:var(--gold)">อายุ ${age}</span></div>
-      <div class="lp-tg" style="color:${c};background:${c}14">${g.cn}</div>
-      <div class="lp-stem ${BD.ELEM_CLS[sE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[y.stemIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[sE]}">${BD.ELEM_CN[sE]}</div></div>
-      <div class="lp-branch ${BD.ELEM_CLS[bE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[y.branchIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[bE]}">${BD.BR_ANIMAL[y.branchIdx]}</div></div>
+      <div class="lp-stem ${BD.ELEM_CLS[sE]}">
+        <div class="lp-c" style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[y.stemIdx]}</div>
+        <div class="lp-s" style="color:${BD.ELEM_CLR[sE]}">${BD.ELEM_CN[sE]} ${BD.STEM_YIN[y.stemIdx]?'หยิน':'หยาง'}</div>
+      </div>
+      <div class="lp-tg" style="color:${sc};background:${sc}14">${sg.cn}</div>
+      <div class="lp-div"></div>
+      <div class="lp-branch ${BD.ELEM_CLS[bE]}">
+        <div class="lp-c" style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[y.branchIdx]}</div>
+        <div class="lp-s" style="color:${BD.ELEM_CLR[bE]}">${BD.ELEM_CN[bE]} ${BD.BR_YIN[y.branchIdx]?'หยิน':'หยาง'}</div>
+      </div>
+      <div class="lp-tg" style="color:${bct};background:${bct}14">${bg.cn}</div>
+      <div class="lp-tg" style="color:var(--muted);background:transparent;font-size:.52rem">${BD.BR_ANIMAL[y.branchIdx]}</div>
+      <div class="lp-ls" style="color:${lsClr}">${lsN}</div>
     </div>`;
   }).join('');
-  return `<div class="lp-row">${cards}</div><p class="text-xs muted mt-3">กรอบทอง = ปัจจุบัน · สี = ธาตุ · Ten God เทียบ Day Master · วงเล็บ = อายุ</p>`;
+  return `<div class="lp-row">${cards}</div><p class="text-xs muted mt-3">★ กรอบทอง = ปัจจุบัน · TenGod บน = 天干 · ล่าง = 藏干หลัก · สี = แข็ง/กลาง/อ่อน</p>`;
 }
 
 function renderMonthly(months, dmIdx, CM){
   const M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
   const cards=months.map(m=>{
     const sE=BD.STEM_E[m.stemIdx],bE=BD.BR_E[m.branchIdx];
-    const g=getTG(dmIdx,m.stemIdx),c=BD.CAT_CLR[g.cat]||'#d4a017';
     const isCurr=m.month===CM;
+    // Stem Ten God
+    const sg=getTG(dmIdx,m.stemIdx),sc=BD.CAT_CLR[sg.cat]||'#d4a017';
+    // Branch Ten God (藏干หลัก)
+    const hiddenMain=BD.HIDDEN[m.branchIdx][0];
+    const bg=getTG(dmIdx,hiddenMain),bct=BD.CAT_CLR[bg.cat]||'#d4a017';
+    // Life Stage
+    const lsI=getLS(dmIdx,m.branchIdx),lsN=BD.LS[lsI],lsT=BD.LS_STR[lsN]||'m';
+    const lsClr=lsT==='s'?'#6ee79a':lsT==='m'?'#fbbf24':'#f87171';
     return `<div class="lp-card${isCurr?' lp-active':''}">
       <div class="lp-age">${M[m.month-1]}${isCurr?' ◀':''}</div>
-      <div class="lp-tg" style="color:${c};background:${c}14">${g.cn}</div>
-      <div class="lp-stem ${BD.ELEM_CLS[sE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[m.stemIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[sE]}">${BD.ELEM_CN[sE]}</div></div>
-      <div class="lp-branch ${BD.ELEM_CLS[bE]}"><div class="lp-c" style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[m.branchIdx]}</div><div class="lp-s" style="color:${BD.ELEM_CLR[bE]}">${BD.ELEM_TH[bE]}</div></div>
+      <div class="lp-stem ${BD.ELEM_CLS[sE]}">
+        <div class="lp-c" style="color:${BD.ELEM_CLR[sE]}">${BD.STEMS[m.stemIdx]}</div>
+        <div class="lp-s" style="color:${BD.ELEM_CLR[sE]}">${BD.ELEM_CN[sE]} ${BD.STEM_YIN[m.stemIdx]?'หยิน':'หยาง'}</div>
+      </div>
+      <div class="lp-tg" style="color:${sc};background:${sc}14">${sg.cn}</div>
+      <div class="lp-div"></div>
+      <div class="lp-branch ${BD.ELEM_CLS[bE]}">
+        <div class="lp-c" style="color:${BD.ELEM_CLR[bE]}">${BD.BRANCHES[m.branchIdx]}</div>
+        <div class="lp-s" style="color:${BD.ELEM_CLR[bE]}">${BD.ELEM_CN[bE]} ${BD.BR_YIN[m.branchIdx]?'หยิน':'หยาง'}</div>
+      </div>
+      <div class="lp-tg" style="color:${bct};background:${bct}14">${bg.cn}</div>
+      <div class="lp-tg" style="color:var(--muted);background:transparent;font-size:.52rem">${BD.BR_ANIMAL[m.branchIdx]}</div>
+      <div class="lp-ls" style="color:${lsClr}">${lsN}</div>
     </div>`;
   }).join('');
-  return `<div class="lp-row">${cards}</div><p class="text-xs muted mt-3">กรอบทอง = เดือนปัจจุบัน · สี = ธาตุ · Ten God เทียบ Day Master</p>`;
+  return `<div class="lp-row">${cards}</div><p class="text-xs muted mt-3">★ กรอบทอง = เดือนปัจจุบัน · TenGod บน = 天干 · ล่าง = 藏干หลัก · สี = แข็ง/กลาง/อ่อน</p>`;
 }
 
 function renderRadar(ec){
@@ -1094,7 +1146,7 @@ function renderAll(d){
     </div>`;
 
   document.getElementById('res-chart').innerHTML        = renderChart(YP,MP,DP,HP,dmIdx);
-  document.getElementById('res-luck').innerHTML         = renderLuckPillars(lpData,year,CY);
+  document.getElementById('res-luck').innerHTML         = renderLuckPillars(lpData,year,CY,dmIdx);
   document.getElementById('res-year').innerHTML         = renderYearCycle(yearCycle,dmIdx,CY,year);
   document.getElementById('res-monthly').innerHTML      = renderMonthly(monthlyPillars,dmIdx,CM);
   _dailyYear=CY; _dailyMonth=CM; renderDailyGrid();
