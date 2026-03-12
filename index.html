@@ -363,7 +363,13 @@ body.bnav-open{padding-bottom:72px;}
             </div>
           </div>
           <div>
-            <label class="lbl">เวลาเกิด <span style="color:var(--muted2);font-weight:400">(ถ้าทราบ)</span></label>
+            <div class="flex items-center justify-between mb-1">
+              <label class="lbl" style="margin-bottom:0">เวลาเกิด <span style="color:var(--muted2);font-weight:400">(ถ้าทราบ)</span></label>
+              <label class="flex items-center gap-1.5 cursor-pointer" style="color:var(--muted2);font-size:0.8rem">
+                <input type="checkbox" id="chk-no-time" onchange="toggleNoTime(this)" style="accent-color:var(--gold);width:14px;height:14px">
+                ไม่รู้เวลาเกิด
+              </label>
+            </div>
             <div class="grid grid-cols-2 gap-2">
               <select id="inp-hour" class="inp"></select>
               <select id="inp-minute" class="inp"></select>
@@ -813,9 +819,9 @@ function renderPillar(p, dmIdx, isDM, label, sub) {
     <div>
       <div class="bz-hdr muted">${label}<br><small style="opacity:.4">${sub}</small></div>
       <div class="tg tg-dm" style="opacity:.3;text-align:center">—</div>
-      <div class="bz-cell inset" style="min-height:90px;display:flex;align-items:center;justify-content:center"><span class="muted" style="font-size:.75rem">ไม่ทราบ</span></div>
+      <div class="bz-cell inset" style="min-height:90px;display:flex;align-items:center;justify-content:center"><span class="muted" style="font-size:1.6rem;font-weight:300">-</span></div>
       <div class="ls ls-m">—</div>
-      <div class="bz-cell inset" style="min-height:90px;display:flex;align-items:center;justify-content:center"><span class="muted" style="font-size:.75rem">—</span></div>
+      <div class="bz-cell inset" style="min-height:90px;display:flex;align-items:center;justify-content:center"><span class="muted" style="font-size:1.6rem;font-weight:300">-</span></div>
     </div>`;
 
   const sE=BD.STEM_E[p.stemIdx], bE=BD.BR_E[p.branchIdx];
@@ -1091,8 +1097,9 @@ async function calculateBazi(){
   const day=+dv, month=+mv, year=+yv;
   if(new Date(year,month-1,day).getDate()!==day){alert('วันที่ไม่ถูกต้อง');return;}
 
+  const noTime=document.getElementById('chk-no-time').checked;
   const hv=document.getElementById('inp-hour').value, nv=document.getElementById('inp-minute').value;
-  const hasTime=hv!==''&&nv!=='';
+  const hasTime=!noTime&&hv!==''&&nv!=='';
   const hour=hasTime?+hv:-1, minute=hasTime?+nv:-1;
   const country=document.getElementById('inp-country').value;
   const useTST=country==='TH';
@@ -1237,6 +1244,15 @@ function initForm(){
   const pe=document.getElementById('inp-province');
   pe.innerHTML=BD.THAI_PROV.map(p=>`<option value="${p[0]}">${p[0]}</option>`).join('');
   pe.value='กรุงเทพมหานคร';
+}
+function toggleNoTime(cb){
+  const disabled=cb.checked;
+  ['inp-hour','inp-minute'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.disabled=disabled;
+    el.style.opacity=disabled?'0.35':'1';
+    if(disabled)el.value='';
+  });
 }
 function handleCountryChange(){
   document.getElementById('section-province').style.display=document.getElementById('inp-country').value==='TH'?'':'none';
