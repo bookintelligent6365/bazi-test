@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>八字 BaZi — วิเคราะห์ดวงชะตาจีน AI</title>
+<title>Bazi AI Master — วิเคราะห์ดวงชะตาจีน AI</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -341,7 +341,6 @@ body.bnav-open{padding-bottom:72px;}
         <div class="flex items-center justify-between mb-5">
           <div>
             <h2 class="text-xl font-bold gold">กรอกข้อมูลวันเกิด</h2>
-            <p class="text-xs muted mt-1">คำนวณบนเครื่องของคุณ — ไม่ส่งข้อมูลออก</p>
           </div>
           <div class="text-3xl opacity-25">八</div>
         </div>
@@ -981,7 +980,7 @@ function renderMonthly(months, dmIdx, CM){
 
 function renderRadar(ec){
   const total=ec.reduce((a,b)=>a+b,0)||1, max=Math.max(...ec,1);
-  const cx=110,cy=110,r=80,LABELS=['木','火','土','金','水'];
+  const cx=110,cy=110,r=80,LABELS=BD.ELEM_TH;
   const A=Array.from({length:5},(_,i)=>-Math.PI/2+2*Math.PI*i/5);
   const dPts=ec.map((v,i)=>[cx+r*(v/max)*Math.cos(A[i]),cy+r*(v/max)*Math.sin(A[i])]);
   const oPts=A.map(a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)]);
@@ -990,14 +989,13 @@ function renderRadar(ec){
   const labels=oPts.map((p,i)=>{
     const lx=cx+(r+26)*Math.cos(A[i]),ly=cy+(r+26)*Math.sin(A[i]);
     const pct=Math.round(ec[i]/total*100);
-    return `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="${BD.ELEM_CLR[i]}" font-weight="700">${LABELS[i]}</text>
-            <text x="${lx}" y="${ly+14}" text-anchor="middle" font-size="8" fill="rgba(212,160,23,.45)">${BD.ELEM_TH[i]}</text>
-            <text x="${lx}" y="${ly+24}" text-anchor="middle" font-size="9" fill="${BD.ELEM_CLR[i]}">${pct}%</text>`;
+    return `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="${BD.ELEM_CLR[i]}" font-weight="700">${LABELS[i]}</text>
+            <text x="${lx}" y="${ly+14}" text-anchor="middle" font-size="9" fill="${BD.ELEM_CLR[i]}">${pct}%</text>`;
   }).join('');
   const dmE=ec.indexOf(Math.max(...ec)), wkE=ec.indexOf(Math.min(...ec));
   const bars=ec.map((v,i)=>`
     <div class="flex items-center gap-3">
-      <div style="width:58px;text-align:right;font-size:.78rem;font-weight:700;color:${BD.ELEM_CLR[i]}">${BD.ELEM_ICO[i]} ${BD.ELEM_CN[i]}</div>
+      <div style="width:58px;text-align:right;font-size:.78rem;font-weight:700;color:${BD.ELEM_CLR[i]}">${BD.ELEM_ICO[i]} ${BD.ELEM_TH[i]}</div>
       <div class="flex-1 bar-track"><div class="bar-fill" data-w="${Math.round(v/max*100)}" style="width:0%;background:${BD.ELEM_CLR[i]}"></div></div>
       <div style="font-size:.75rem;color:var(--muted);width:30px;text-align:right">${Math.round(v/total*100)}%</div>
     </div>`).join('');
@@ -1014,8 +1012,8 @@ function renderRadar(ec){
       <div class="flex-1 space-y-3 min-w-[180px]" id="elem-bars">
         ${bars}
         <div class="inset p-3 rounded-lg mt-4 text-xs">
-          <div class="flex justify-between mb-1.5"><span class="muted">ธาตุเด่น</span><span style="color:${BD.ELEM_CLR[dmE]};font-weight:700">${BD.ELEM_ICO[dmE]} ${BD.ELEM_CN[dmE]} ${BD.ELEM_TH[dmE]}</span></div>
-          <div class="flex justify-between"><span class="muted">ธาตุขาด</span><span style="color:${BD.ELEM_CLR[wkE]};font-weight:700">${BD.ELEM_ICO[wkE]} ${BD.ELEM_CN[wkE]} ${BD.ELEM_TH[wkE]}</span></div>
+          <div class="flex justify-between mb-1.5"><span class="muted">ธาตุเด่น</span><span style="color:${BD.ELEM_CLR[dmE]};font-weight:700">${BD.ELEM_ICO[dmE]} ${BD.ELEM_TH[dmE]}</span></div>
+          <div class="flex justify-between"><span class="muted">ธาตุขาด</span><span style="color:${BD.ELEM_CLR[wkE]};font-weight:700">${BD.ELEM_ICO[wkE]} ${BD.ELEM_TH[wkE]}</span></div>
         </div>
       </div>
     </div>`;
@@ -1238,8 +1236,8 @@ function dcNav(delta){
 function initForm(){
   const fill=(id,html)=>{document.getElementById(id).innerHTML=html;};
   fill('inp-day','<option value="">วัน</option>'+Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join(''));
-  const MN=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  fill('inp-month','<option value="">เดือน</option>'+MN.map((m,i)=>`<option value="${i+1}">${i+1} ${m}</option>`).join(''));
+  const MN=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  fill('inp-month','<option value="">เดือน</option>'+MN.map((m,i)=>`<option value="${i+1}">${m}</option>`).join(''));
   fill('inp-year','<option value="">ปี ค.ศ.</option>'+Array.from({length:106},(_,i)=>`<option value="${2026-i}">${2026-i} (พ.ศ.${2026-i+543})</option>`).join(''));
   fill('inp-hour','<option value="">ชั่วโมง</option>'+Array.from({length:24},(_,i)=>`<option value="${i}">${String(i).padStart(2,'0')} น.</option>`).join(''));
   fill('inp-minute','<option value="">นาที</option>'+Array.from({length:60},(_,i)=>`<option value="${i}">${String(i).padStart(2,'0')}</option>`).join(''));
